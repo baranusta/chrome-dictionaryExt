@@ -1,7 +1,9 @@
-.selection_bubble {
+.dictionary-tooltip{
   visibility: hidden;
   position: absolute;
-  top: 0;
-  left: 0;
-  background:-webkit-gradient(linear, left top, left bottom, from(#2e88c4), to(#075698));
+  background: #AAA;
+  color: #fff;
+  content: attr(title);
+  width: 220px;
+  height: 350px;
 }
