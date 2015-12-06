@@ -1,9 +1,30 @@
-.dictionary-tooltip{
-  visibility: hidden;
-  position: absolute;
-  background: #AAA;
-  color: #fff;
-  content: attr(title);
-  width: 220px;
-  height: 350px;
+.dictionary-bubble{
+    visibility: hidden;
+    position: absolute;
+  	width: 280px;
+  	text-align: left;
+  	background-color: #fff;
+  	border: 8px solid #666;
+  	-webkit-border-radius: 30px;
+  	-moz-border-radius: 30px;
+  	border-radius: 20px;
+  	-webkit-box-shadow: 2px 2px 4px #888;
+  	-moz-box-shadow: 2px 2px 4px #888;
+  	box-shadow: 2px 2px 4px #888;
+}
+
+.dictionary-words-container{
+    display: flex;
+    padding: 10px;
+}
+.dictionary-leftColumn{
+    width: 50%;
+}
+.dictionary-rightColumn{
+  padding-left: 5px;
+    width: 50%;
+}
+
+.dictionary-sentences-container{
+  padding: 10px;
 }
