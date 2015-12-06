@@ -82,29 +82,45 @@ var addChildrenFromArray = function(elmntAdder,childrens,truncateLim){
   }
 }
 
+var isValidString = function(selected){
+  for (var i = 0,count = 0, selected_length = selected.length; i < selected_length; i++) {
+    if(selected[i] == ' '){
+      count++;
+    }
+    if(count>=2){
+      return false;
+    }
+  }
+  return true;
+}
+
 var myTranslator = new Translator(0,1,0);
 bubble.createForDom();
 
 // Lets listen to mouseup DOM events.
 document.addEventListener('mouseup', function (e) {
   var selection = window.getSelection().toString();
-  if (selection.length > 0) {
-    bubble.makeVisible();
-    bubble.determineNewPostion();
-    bubble.renderPosition();
+  if(selection.length > 0){
+    selection = selection.trim();
+    if (isValidString(selection)) {
 
-    myTranslator.getMeaningForLeft(selection,3,function(wordArray){
-      addChildrenFromArray(bubble.addToLeftColumn,wordArray,15);
+      bubble.makeVisible();
+      bubble.determineNewPostion();
       bubble.renderPosition();
-    });
-    myTranslator.getMeaningForRight(selection,3,function(wordArray){
-      addChildrenFromArray(bubble.addToRightColumn,wordArray,15);
-      bubble.renderPosition();
-    });
-    myTranslator.getSentences(selection,2, function(sentenceArray){
-      addChildrenFromArray(bubble.addToSentenceRow,sentenceArray,50);
-      bubble.renderPosition();
-    });
+
+      myTranslator.getMeaningForLeft(selection,3,function(wordArray){
+        addChildrenFromArray(bubble.addToLeftColumn,wordArray,15);
+        bubble.renderPosition();
+      });
+      myTranslator.getMeaningForRight(selection,3,function(wordArray){
+        addChildrenFromArray(bubble.addToRightColumn,wordArray,15);
+        bubble.renderPosition();
+      });
+      myTranslator.getSentences(selection,2, function(sentenceArray){
+        addChildrenFromArray(bubble.addToSentenceRow,sentenceArray,50);
+        bubble.renderPosition();
+      });
+    }
   }
 }, false);
 
