@@ -18,13 +18,57 @@
     padding: 10px;
 }
 .dictionary-leftColumn{
+  position: relative;
     width: 50%;
 }
 .dictionary-rightColumn{
+  position: relative;
   padding-left: 5px;
     width: 50%;
 }
 
 .dictionary-sentences-container{
+  position: relative;
   padding: 10px;
+  margin-right: 10px;
+}
+
+.logoDiv{
+  position: relative;
+  max-width: 100%;
+  height: 30px;
+}
+
+.logo{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+   height: 100%;
+    max-width: 100%;
+}
+
+/* unvisited link */
+.urlText {
+  position:absolute;
+  right:5px;
+  bottom: 0px;
+    text-decoration: underline;
+    color: blue;
+}
+
+/* visited link */
+.urlText:visited {
+    color: gray;
+}
+
+/* mouse over link */
+.urlText:hover {
+    text-decoration: none;
+    cursor: pointer;
+    color: blue;
+}
+
+/* selected link */
+.urlText:active {
+    color: blue;
 }

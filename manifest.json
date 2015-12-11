@@ -14,15 +14,20 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["jquery.min.js","translatorFactory.js","translator.js","content.js"],
+      "js": ["jquery.min.js","bubble.js","translatorFactory.js","translator.js","content.js"],
       "css": ["main.css"],
       "run_at": "document_end",
       "all_frames": true
     }
   ],
+  "web_accessible_resources": [
+      "icons/*.png",
+      "icons/*.jpg"
+    ],
 
   "permissions": [
     "activeTab",
+    "tabs",
     "https://ajax.googleapis.com/"
   ]
 }

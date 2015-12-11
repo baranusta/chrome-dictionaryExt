@@ -28,3 +28,15 @@ Translator.prototype.getMeaningForRight = function(word,numberOfMeaning,done){
 Translator.prototype.getSentences = function(word,numberOfExample,done){
   return this.sentenceProvider.getSentences(word,numberOfExample,done);
 };
+
+Translator.prototype.getLogoOfLeft = function(word,numberOfMeaning,done){
+  return this.leftColumnTranslator.logo
+};
+
+Translator.prototype.getLogoOfRight = function(word,numberOfMeaning,done){
+  return this.rightColumnTranslator.logo
+};
+
+Translator.prototype.getLogoOfSentenceContainer = function(word,numberOfExample,done){
+  return this.sentenceProvider.logo;
+};

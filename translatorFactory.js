@@ -1,6 +1,8 @@
 var translatorFactory = (function(){
     var translatorOptions = [
-      {name: "Tureng", getWords:function(word,number,done){
+      {name: "Tureng", logo: "icons/turenglogo.png"
+      , getWords:function(word,number,done){
+      var url = 'http://tureng.com/tr/turkce-ingilizce/'+word;
         $.get('http://tureng.com/tr/turkce-ingilizce/'+word).then(function(responseData) {
               var my_div = $('table#englishResultsTable tbody', $(responseData));
               var result = [];
@@ -18,11 +20,13 @@ var translatorFactory = (function(){
                   }
                 }
               }
-              done(result);
+              done(result,url);
             });
       }},
 
-      {name:"SesliSozlük", getWords:function(word,number,done){
+      {name:"SesliSozlük", logo: "icons/sesliThmb.png"
+      , getWords:function(word,number,done){
+      var url = 'https://www.seslisozluk.net/en/what-is-the-meaning-of-'+word;
         $.get('https://www.seslisozluk.net/en/what-is-the-meaning-of-'+word).then(function(responseData) {
           var my_div = $('div.panel-body.sozluk > ol li', $(responseData));
           var result = [];
@@ -36,15 +40,17 @@ var translatorFactory = (function(){
             }
             result.push(my_div[d].innerHTML);
           });
-          done(result);
+          done(result,url);
         });
       }}
     ];
 
     var sentenceProviderOptions = [
-      OXFORD = {name:"Oxford", getSentences: function(word,number,done){
+      OXFORD = {name:"Oxford", logo: "icons/oxfordThmb.png"
+      ,getSentences: function(word,number,done){
         word = word.toLowerCase();
-        $.get('http://www.oxforddictionaries.com/definition/english/'+word+'?searchDictCode=all').then(function(responseData) {
+        var url = 'http://www.oxforddictionaries.com/definition/english/'+word+'?searchDictCode=all';
+        $.get(url).then(function(responseData) {
           var eachUsage = $('.se1.senseGroup > .se2', $(responseData));
           var result = [];
           eachUsage.each(function(index,item){
@@ -54,7 +60,7 @@ var translatorFactory = (function(){
             if(sentences && sentences.childNodes.length>0)
               result.push(sentences.firstChild.innerHTML);
           });
-          done(result);
+          done(result,url);
         });
       }}
     ];
