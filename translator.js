@@ -17,16 +17,16 @@ Translator.prototype.setLeftColumnTranslator = function(translatorOpt){
   this.rightColumnTranslator = translatorOpt;
 };
 
-Translator.prototype.getMeaningForLeft = function(word,numberOfMeaning,done){
-  return this.leftColumnTranslator.getWords(word,numberOfMeaning,done);
+Translator.prototype.getMeaningForLeft = function(word,numberOfMeaning,done,fail){
+  return this.leftColumnTranslator.getWords(word,numberOfMeaning,done,fail);
 };
 
-Translator.prototype.getMeaningForRight = function(word,numberOfMeaning,done){
-  return this.rightColumnTranslator.getWords(word,numberOfMeaning,done);
+Translator.prototype.getMeaningForRight = function(word,numberOfMeaning,done,fail){
+  return this.rightColumnTranslator.getWords(word,numberOfMeaning,done,fail);
 };
 
-Translator.prototype.getSentences = function(word,numberOfExample,done){
-  return this.sentenceProvider.getSentences(word,numberOfExample,done);
+Translator.prototype.getSentences = function(word,numberOfExample,done,fail){
+  return this.sentenceProvider.getSentences(word,numberOfExample,done,fail);
 };
 
 Translator.prototype.getLogoOfLeft = function(word,numberOfMeaning,done){

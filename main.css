@@ -2,6 +2,7 @@
     visibility: hidden;
     position: absolute;
   	width: 280px;
+    z-index: 1;
   	text-align: left;
   	background-color: #fff;
   	border: 8px solid #666;
@@ -49,9 +50,6 @@
 
 /* unvisited link */
 .urlText {
-  position:absolute;
-  right:5px;
-  bottom: 0px;
     text-decoration: underline;
     color: blue;
 }

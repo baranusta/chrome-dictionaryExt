@@ -3,12 +3,12 @@
 
   "name": "Sözlük",
   "description": "This extension shows meaning of the selected word's meaning and example sentences",
-  "version": "1.0",
+  "version": "1.0.2",
 
   "browser_action": {
     "default_icon": "dictionaryIcon.png",
     "default_popup": "popup.html",
-    "default_title": "denemeOfc"
+    "default_title": "Sözlük"
   },
 
   "content_scripts": [
@@ -20,7 +20,7 @@
       "all_frames": true
     }
   ],
-  
+
   "icons":{
     "128":"dictionaryIcon.png"
   },

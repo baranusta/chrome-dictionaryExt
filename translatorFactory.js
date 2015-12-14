@@ -1,7 +1,7 @@
 var translatorFactory = (function(){
     var translatorOptions = [
       {name: "Tureng", logo: "icons/turenglogo.png"
-      , getWords:function(word,number,done){
+      , getWords:function(word,number,done,fail){
       var url = 'http://tureng.com/tr/turkce-ingilizce/'+word;
         $.get('http://tureng.com/tr/turkce-ingilizce/'+word).then(function(responseData) {
               var my_div = $('table#englishResultsTable tbody', $(responseData));
@@ -21,11 +21,13 @@ var translatorFactory = (function(){
                 }
               }
               done(result,url);
+            }).fail(function(){
+              fail();
             });
       }},
 
       {name:"SesliSozlük", logo: "icons/sesliThmb.png"
-      , getWords:function(word,number,done){
+      , getWords:function(word,number,done,fail){
       var url = 'https://www.seslisozluk.net/en/what-is-the-meaning-of-'+word;
         $.get('https://www.seslisozluk.net/en/what-is-the-meaning-of-'+word).then(function(responseData) {
           var my_div = $('div.panel-body.sozluk > ol li', $(responseData));
@@ -41,13 +43,15 @@ var translatorFactory = (function(){
             result.push(my_div[d].innerHTML);
           });
           done(result,url);
+        }).fail(function(){
+          fail();
         });
       }}
     ];
 
     var sentenceProviderOptions = [
       OXFORD = {name:"Oxford", logo: "icons/oxfordThmb.png"
-      ,getSentences: function(word,number,done){
+      ,getSentences: function(word,number,done,fail){
         word = word.toLowerCase();
         var url = 'http://www.oxforddictionaries.com/definition/english/'+word+'?searchDictCode=all';
         $.get(url).then(function(responseData) {
@@ -61,6 +65,8 @@ var translatorFactory = (function(){
               result.push(sentences.firstChild.innerHTML);
           });
           done(result,url);
+        }).fail(function(){
+          fail();
         });
       }}
     ];
