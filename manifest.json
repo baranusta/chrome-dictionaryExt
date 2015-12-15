@@ -6,7 +6,7 @@
   "version": "1.0.2",
 
   "browser_action": {
-    "default_icon": "dictionaryIcon.png",
+    "default_icon": "icons/dictionaryIcon.png",
     "default_popup": "popup.html",
     "default_title": "Sözlük"
   },
@@ -14,15 +14,15 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["jquery.min.js","bubble.js","translatorFactory.js","translator.js","content.js"],
-      "css": ["main.css"],
+      "js": ["scripts/jquery.min.js","scripts/bubble.js","scripts/translatorFactory.js","scripts/translator.js","scripts/content.js"],
+      "css": ["css/main.css"],
       "run_at": "document_end",
       "all_frames": true
     }
   ],
 
   "icons":{
-    "128":"dictionaryIcon.png"
+    "128":"icons/dictionaryIcon.png"
   },
 
   "web_accessible_resources": [
