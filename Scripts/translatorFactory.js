@@ -34,18 +34,14 @@ var translatorFactory = (function () {
             , getWords: function (word, number, done, fail) {
             var url = 'https://www.seslisozluk.net/en/what-is-the-meaning-of-' + word;
             $.get('https://www.seslisozluk.net/en/what-is-the-meaning-of-' + word).then(function (responseData) {
-                var my_div = $('div.panel-body.sozluk > ol li', $(responseData));
                 var result = [];
-                my_div.each(function (d) {
-                    if (d >= number) {
-                        return;
-                    }
-                    var ind = my_div[d].innerHTML.search("<");
-                    if (ind >= 0) {
-                        my_div[d].innerHTML = my_div[d].innerHTML.substring(0, ind);
-                    }
-                    result.push(my_div[d].innerHTML);
-                });
+                $('div.panel-body.sozluk dl:first dd a', $(responseData))
+                                .each(function (d,elm) {
+                                      if (d >= number) {
+                                          return;
+                                      }
+                                      result.push(elm.innerHTML);}
+                );
                 done(result, url);
             }).fail(function () {
                 fail();

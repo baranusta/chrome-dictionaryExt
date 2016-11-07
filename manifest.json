@@ -1,14 +1,14 @@
 {
   "manifest_version": 2,
 
-  "name": "Sözlük",
+  "name": "Turta",
   "description": "This extension shows meaning of the selected word's meaning and example sentences",
-  "version": "1.0.2",
+  "version": "1.0.3",
 
   "browser_action": {
     "default_icon": "icons/dictionaryIcon.png",
     "default_popup": "popup.html",
-    "default_title": "Sözlük"
+    "default_title": "Turta"
   },
 
   "content_scripts": [

@@ -58,6 +58,9 @@ var bubbleController = (function () {
             }
             return true;
         },
+        shouldOpenBubble: function(event, selected){
+          return event.ctrlKey && selected.length > 0;
+        },
         openBubble: function () {
             bubble.makeVisible();
             bubble.determineNewPostion();
@@ -105,33 +108,37 @@ bubbleController.createBubble();
 // Lets listen to mouseup DOM events.
 document.addEventListener('mouseup', function (e) {
     var selection = window.getSelection().toString();
+    //if it is an empty string or ctrl key is not pressing.
+    if(!selection || !bubbleController.shouldOpenBubble(e,selection))
+      return;
     selection = selection.trim();
-    if (selection.length > 0) {
-        if (bubbleController.isSelectedStringValid(selection)) {
-            bubbleController.openBubble();
-            try {
-                myTranslator.getMeaningForLeft(selection, 3, function (wordArray, url) {
-                    bubbleController.populateContent(container.LEFTCOLUMN, wordArray, url, myTranslator.getLogoOfLeft());
-                }, function () {
-                    bubbleController.populateContent(container.LEFTCOLUMN, [], myTranslator.getLogoOfLeft());
-                });
-                myTranslator.getMeaningForRight(selection, 3, function (wordArray, url) {
-                    bubbleController.populateContent(container.RIGHTCOLUMN, wordArray, url, myTranslator.getLogoOfRight());
-                }, function () {
-                    bubbleController.populateContent(container.LEFTCOLUMN, [], myTranslator.getLogoOfLeft());
-                });
-                myTranslator.getSentences(selection, 2, function (sentenceArray, url) {
-                    bubbleController.populateContent(container.BOTTOMROW, sentenceArray, url, myTranslator.getLogoOfSentenceContainer());
-                }, function () {
-                    bubbleController.populateContent(container.BOTTOMROW, [], myTranslator.getLogoOfSentenceContainer());
-                });
-            }
-            catch (err) {
-                console.log(err);
-            }
-
-        }
-    }
+    bubbleController.openBubble();
+    try {
+      myTranslator.getMeaningForLeft(selection, 3,
+        function (wordArray, url) {
+            bubbleController.populateContent(container.LEFTCOLUMN, wordArray, url, myTranslator.getLogoOfLeft());
+        },
+        function () {
+            bubbleController.populateContent(container.LEFTCOLUMN, [], myTranslator.getLogoOfLeft());
+      });
+      myTranslator.getMeaningForRight(selection, 3,
+        function (wordArray, url) {
+              bubbleController.populateContent(container.RIGHTCOLUMN, wordArray, url, myTranslator.getLogoOfRight());
+          },
+        function () {
+              bubbleController.populateContent(container.RIGHTCOLUMN, [], myTranslator.getLogoOfRight());
+      });
+      myTranslator.getSentences(selection, 2,
+        function (sentenceArray, url) {
+              bubbleController.populateContent(container.BOTTOMROW, sentenceArray, url, myTranslator.getLogoOfSentenceContainer());
+        },
+        function () {
+              bubbleController.populateContent(container.BOTTOMROW, [], myTranslator.getLogoOfSentenceContainer());
+          });
+      }
+      catch (err) {
+          console.log(err);
+      }
 }, false);
 
 // Close the bubble when we click on the screen.
