@@ -73,7 +73,7 @@ var bubbleController = (function () {
             statusOfContainers.left = 0;
             statusOfContainers.bottom = 0;
         },
-        populateContent: function (type, array, url, logo) {
+        populateContent: function (type, array, logo, url) {
             switch (type) {
                 case container.LEFTCOLUMN:
                     if (statusOfContainers.left == 0) {
@@ -116,29 +116,29 @@ document.addEventListener('mouseup', function (e) {
     try {
       myTranslator.getMeaningForLeft(selection, 3,
         function (wordArray, url) {
-            bubbleController.populateContent(container.LEFTCOLUMN, wordArray, url, myTranslator.getLogoOfLeft());
+            bubbleController.populateContent(container.LEFTCOLUMN, wordArray, myTranslator.getLogoOfLeft(), url);
         },
         function () {
             bubbleController.populateContent(container.LEFTCOLUMN, [], myTranslator.getLogoOfLeft());
       });
       myTranslator.getMeaningForRight(selection, 3,
         function (wordArray, url) {
-              bubbleController.populateContent(container.RIGHTCOLUMN, wordArray, url, myTranslator.getLogoOfRight());
+              bubbleController.populateContent(container.RIGHTCOLUMN, wordArray, myTranslator.getLogoOfRight(), url);
           },
         function () {
               bubbleController.populateContent(container.RIGHTCOLUMN, [], myTranslator.getLogoOfRight());
       });
       myTranslator.getSentences(selection, 2,
         function (sentenceArray, url) {
-              bubbleController.populateContent(container.BOTTOMROW, sentenceArray, url, myTranslator.getLogoOfSentenceContainer());
+              bubbleController.populateContent(container.BOTTOMROW, sentenceArray, myTranslator.getLogoOfSentenceContainer(), url);
         },
         function () {
               bubbleController.populateContent(container.BOTTOMROW, [], myTranslator.getLogoOfSentenceContainer());
           });
-      }
-      catch (err) {
-          console.log(err);
-      }
+    }
+    catch (err) {
+        console.log(err);
+    }
 }, false);
 
 // Close the bubble when we click on the screen.

@@ -29,14 +29,14 @@ Translator.prototype.getSentences = function (word, numberOfExample, done, fail)
     return this.sentenceProvider.getSentences(word, numberOfExample, done, fail);
 };
 
-Translator.prototype.getLogoOfLeft = function (word, numberOfMeaning, done) {
+Translator.prototype.getLogoOfLeft = function () {
     return this.leftColumnTranslator.logo
 };
 
-Translator.prototype.getLogoOfRight = function (word, numberOfMeaning, done) {
+Translator.prototype.getLogoOfRight = function () {
     return this.rightColumnTranslator.logo
 };
 
-Translator.prototype.getLogoOfSentenceContainer = function (word, numberOfExample, done) {
+Translator.prototype.getLogoOfSentenceContainer = function () {
     return this.sentenceProvider.logo;
 };

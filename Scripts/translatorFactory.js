@@ -5,7 +5,9 @@ var translatorFactory = (function () {
             name: "Tureng", logo: "icons/turenglogo.png"
             , getWords: function (word, number, done, fail) {
             var url = 'http://tureng.com/tr/turkce-ingilizce/' + word;
-            $.get('http://tureng.com/tr/turkce-ingilizce/' + word).then(function (responseData) {
+            makeRequest(url,function (responseData) {
+                if(!responseData)
+                   fail();
                 var my_div = $('table#englishResultsTable tbody', $(responseData));
                 var result = [];
                 if (my_div.length > 0) {
@@ -23,8 +25,6 @@ var translatorFactory = (function () {
                     }
                 }
                 done(result, url);
-            }).fail(function () {
-                fail();
             });
         }
         },
@@ -33,7 +33,9 @@ var translatorFactory = (function () {
             name: "SesliSozlük", logo: "icons/sesliThmb.png"
             , getWords: function (word, number, done, fail) {
             var url = 'https://www.seslisozluk.net/en/what-is-the-meaning-of-' + word;
-            $.get('https://www.seslisozluk.net/en/what-is-the-meaning-of-' + word).then(function (responseData) {
+            makeRequest(url,function (responseData) {
+                if(!responseData)
+                   fail();
                 var result = [];
                 $('div.panel-body.sozluk dl:first dd a', $(responseData))
                                 .each(function (d,elm) {
@@ -43,8 +45,6 @@ var translatorFactory = (function () {
                                       result.push(elm.innerHTML);}
                 );
                 done(result, url);
-            }).fail(function () {
-                fail();
             });
         }
         }
@@ -56,19 +56,19 @@ var translatorFactory = (function () {
             , getSentences: function (word, number, done, fail) {
                 word = word.toLowerCase();
                 var url = 'http://www.oxforddictionaries.com/definition/english/' + word + '?searchDictCode=all';
-                $.get(url).then(function (responseData) {
-                    var eachUsage = $('.se1.senseGroup > .se2', $(responseData));
+                makeRequest(url,function (responseData) {
+                    if(!responseData)
+                       fail();
+                    var eachUsage = $('.gramb ul.semb', $(responseData));
                     var result = [];
                     eachUsage.each(function (index, item) {
                         if (index >= number)
                             return;
-                        var sentences = item.getElementsByClassName('sentence_dictionary')[0];
-                        if (sentences && sentences.childNodes.length > 0)
-                            result.push(sentences.firstChild.innerHTML);
+                        var sentence = $('.exg:first .ex em',item)[0].innerHTML
+                        if (sentence)
+                            result.push(sentence);
                     });
                     done(result, url);
-                }).fail(function () {
-                    fail();
                 });
             }
         }
@@ -91,3 +91,14 @@ var translatorFactory = (function () {
         }
     }
 })();
+
+function makeRequest(url,callback){
+  chrome.runtime.sendMessage({
+    method: 'GET',
+    action: 'xhttp',
+    url: url
+  }, function(responseText) {
+    callback(responseText);
+    /*Callback function to deal with the response*/
+  });
+}

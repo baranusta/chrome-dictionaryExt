@@ -8,7 +8,7 @@
   "browser_action": {
     "default_icon": "icons/dictionaryIcon.png",
     "default_popup": "popup.html",
-    "default_title": "Turta"
+    "default_title": "Sözlük"
   },
 
   "content_scripts": [
@@ -20,6 +20,10 @@
       "all_frames": true
     }
   ],
+  "background": {
+      "scripts": ["scripts/jquery.min.js","scripts/background.js"],
+      "persistent": false
+  },
 
   "icons":{
     "128":"icons/dictionaryIcon.png"
@@ -33,6 +37,7 @@
   "permissions": [
     "activeTab",
     "tabs",
-    "https://ajax.googleapis.com/"
+    "https://ajax.googleapis.com/",
+    "http://www.tureng.com/"
   ]
 }
