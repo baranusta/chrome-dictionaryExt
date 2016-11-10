@@ -30,7 +30,7 @@ var translatorFactory = (function () {
         },
 
         {
-            name: "SesliSozlük", logo: "icons/sesliThmb.png"
+            name: "SesliSozlük", logo: "icons/seslisozluk.png"
             , getWords: function (word, number, done, fail) {
             var url = 'https://www.seslisozluk.net/en/what-is-the-meaning-of-' + word;
             makeRequest(url,function (responseData) {
@@ -51,11 +51,11 @@ var translatorFactory = (function () {
     ];
 
     var sentenceProviderOptions = [
-        OXFORD = {
-            name: "Oxford", logo: "icons/oxfordThmb.png"
+        /*OXFORD = {
+            name: "Oxford", logo: "icons/oxforddictionary.jpg"
             , getSentences: function (word, number, done, fail) {
                 word = word.toLowerCase();
-                var url = 'http://www.oxforddictionaries.com/definition/english/' + word + '?searchDictCode=all';
+                var url = 'https://en.oxforddictionaries.com/definition/';
                 makeRequest(url,function (responseData) {
                     if(!responseData)
                        fail();
@@ -69,9 +69,9 @@ var translatorFactory = (function () {
                             result.push(sentence);
                     });
                     done(result, url);
-                });
+                }, word);
             }
-        }
+        }*/
     ];
 
     return {
@@ -92,11 +92,12 @@ var translatorFactory = (function () {
     }
 })();
 
-function makeRequest(url,callback){
+function makeRequest(url,callback,word){
   chrome.runtime.sendMessage({
     method: 'GET',
     action: 'xhttp',
-    url: url
+    url: url,
+    word: word
   }, function(responseText) {
     callback(responseText);
     /*Callback function to deal with the response*/

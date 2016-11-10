@@ -3,7 +3,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         var method = request.method ? request.method.toUpperCase() : 'GET';
 
         if(method === 'GET'){
-          $.get(request.url).then(function(responseData){callback(responseData);}).fail(callback);
+          if(!!request.word)
+          {
+            $.get(request.url, request.word).then(function(responseData){callback(responseData);}).fail(callback);
+          }
+          else
+            $.get(request.url).then(function(responseData){callback(responseData);}).fail(callback);
         }
         else if(method === 'POST'){
         }
