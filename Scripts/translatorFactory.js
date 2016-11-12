@@ -99,7 +99,20 @@ function makeRequest(url,callback,word){
     url: url,
     word: word
   }, function(responseText) {
-    callback(responseText);
+      responseText = responseText.replace(/<img\b[^>]*>/ig, '');
+      responseText = stripScripts(responseText);
+      callback(responseText);
     /*Callback function to deal with the response*/
   });
+}
+
+function stripScripts(s) {
+  var div = document.createElement('div');
+  div.innerHTML = s;
+  var scripts = div.getElementsByTagName('script');
+  var i = scripts.length;
+  while (i--) {
+    scripts[i].parentNode.removeChild(scripts[i]);
+  }
+  return div.innerHTML;
 }
