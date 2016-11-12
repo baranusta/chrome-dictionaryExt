@@ -2,51 +2,53 @@
 var translatorFactory = (function () {
     var translatorOptions = [
         {
-            name: "Tureng", logo: "icons/turenglogo.png"
-            , getWords: function (word, number, done, fail) {
-            var url = 'http://tureng.com/tr/turkce-ingilizce/' + word;
-            makeRequest(url,function (responseData) {
-                if(!responseData)
-                   fail();
-                var my_div = $('table#englishResultsTable tbody', $(responseData));
-                var result = [];
-                if (my_div.length > 0) {
-                    var myTable = my_div[0].rows;
-                    if (myTable.length > number) {
-                        var i = 3, lim = 6;
-                        for (; i < myTable.length && i < lim; i++) {
-                            if (myTable[i].cells.length > 3) {
-                                result.push(myTable[i].cells[3].firstChild.innerHTML);
-                            }
-                            else {
-                                lim++;
+            name: "Tureng",
+            logo: "icons/turenglogo.png",
+            getWords: function (word, number, done, fail) {
+                var url = 'http://tureng.com/tr/turkce-ingilizce/' + word;
+                makeRequest(url,function (responseData) {
+                    if(!responseData)
+                        fail();
+                    var my_div = $('table#englishResultsTable tbody', $(responseData));
+                    var result = [];
+                    if (my_div.length > 0) {
+                        var myTable = my_div[0].rows;
+                        if (myTable.length > number) {
+                            var i = 3, lim = 6;
+                            for (; i < myTable.length && i < lim; i++) {
+                                if (myTable[i].cells.length > 3) {
+                                    result.push(myTable[i].cells[3].firstChild.innerHTML);
+                                }
+                                else {
+                                    lim++;
+                                }
                             }
                         }
                     }
-                }
-                done(result, url);
-            });
-        }
+                    done(result, url);
+                });
+            }
         },
 
         {
-            name: "SesliSozlük", logo: "icons/seslisozluk.png"
-            , getWords: function (word, number, done, fail) {
-            var url = 'https://www.seslisozluk.net/en/what-is-the-meaning-of-' + word;
-            makeRequest(url,function (responseData) {
-                if(!responseData)
-                   fail();
-                var result = [];
-                $('div.panel-body.sozluk dl:first dd a', $(responseData))
-                                .each(function (d,elm) {
-                                      if (d >= number) {
-                                          return;
-                                      }
-                                      result.push(elm.innerHTML);}
-                );
-                done(result, url);
-            });
-        }
+            name: "SesliSozlük",
+            logo: "icons/seslisozluk.png",
+            getWords: function (word, number, done, fail) {
+                var url = 'https://www.seslisozluk.net/en/what-is-the-meaning-of-' + word;
+                makeRequest(url,function (responseData) {
+                    if(!responseData)
+                       fail();
+                    var result = [];
+                    $('div.panel-body.sozluk dl:first dd a', $(responseData))
+                                    .each(function (d,elm) {
+                                          if (d >= number) {
+                                              return;
+                                          }
+                                          result.push(elm.innerHTML);}
+                    );
+                    done(result, url);
+                });
+            }
         }
     ];
 
