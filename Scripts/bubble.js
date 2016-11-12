@@ -7,8 +7,15 @@ var bubble = (function () {
         rightColumn;
     return {
         createForDom: function () {
+            var maxZ = Math.max.apply(null,
+              $.map($('body *'), function(e,n) {
+                if ($(e).css('position') != 'static')
+                  return parseInt($(e).css('z-index')) || 1;
+              }));
+
             bubbleDom = document.createElement('div');
             bubbleDom.setAttribute('class', 'dictionary-bubble');
+            bubbleDom.style.zIndex = maxZ + 1;
 
             wordsContainer = document.createElement('div');
             wordsContainer.setAttribute('class', 'dictionary-words-container');

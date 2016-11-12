@@ -141,9 +141,7 @@ document.addEventListener('mouseup', function (e) {
         console.log(err);
     }
 }, false);
-  $.get("https://en.oxforddictionaries.com/definition/","book").then(function(responseData){console.log(responseData);});
-    $.get("https://www.seslisozluk.net/en/what-is-the-meaning-of-","book").then(function(responseData){console.log(responseData);});
-      $.get("http://tureng.com/tr/turkce-ingilizce/","book").then(function(responseData){console.log(responseData);});
+
 // Close the bubble when we click on the screen.
 document.addEventListener('mousedown', function (e) {
     var element = (e.target || e.srcElement);

@@ -13,7 +13,6 @@ body {
     visibility: hidden;
     position: absolute;
   	width: 280px;
-    z-index: 1;
   	text-align: left;
   	background-color: #fff;
   	border: 8px solid #666;
