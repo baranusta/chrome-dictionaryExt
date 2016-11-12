@@ -73,6 +73,7 @@ font-size:12px;
 .urlText {
     text-decoration: underline;
     color: blue;
+    margin-bottom: 2px
 }
 
 /* visited link */
