@@ -11,7 +11,7 @@ document.addEventListener('mouseup', function (e) {
 
     var rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
     bottom = $(window).height() - rect.top + 4 - window.pageYOffset;
-    left = rect.left + (rect.width / 2); 
+    left = rect.left + (rect.width / 2);
     myBubble.renderAtNewPosition(bottom,left);
     myBubble.showTranslationResults(selection);
 }, false);
@@ -26,7 +26,7 @@ document.addEventListener('mousedown', function (e) {
             win.focus();
         }
     }
-    myBubble.cleanBubble();
+    myBubble.closeBubble();
 }, false);
 
 isSelectedStringValid = function (selected) {

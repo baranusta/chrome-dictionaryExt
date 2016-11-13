@@ -41,6 +41,11 @@ class TranslationBubbleDoubleColumnAndRow extends TranslationBubble{
                                                                     });
     }
 
+    closeBubble(){
+        if(this.bubble.style.visibility != 'hidden')
+            this._cleanBubble();
+    }
+
     _createColumns(results, url, logo, columnIndex){
         let element = this._createElement(results, 50, url, logo);
         if(columnIndex==0)
@@ -54,7 +59,8 @@ class TranslationBubbleDoubleColumnAndRow extends TranslationBubble{
         this.sentencesContainer.appendChild(element);
     }
 
-    cleanBubble(){
+
+    _cleanBubble(){
         this.changeVisibility();
         this._childrenRemover(this.leftColumn);
         this._childrenRemover(this.rightColumn);
