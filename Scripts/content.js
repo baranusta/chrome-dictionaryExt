@@ -29,6 +29,8 @@ document.addEventListener('mousedown', function (e) {
     myBubble.closeBubble();
 }, false);
 
+
+
 isSelectedStringValid = function (selected) {
     for (var i = 0, count = 0, selected_length = selected.length; i < selected_length; i++) {
         if (selected[i] == ' ') {

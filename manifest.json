@@ -8,13 +8,17 @@
   "browser_action": {
     "default_icon": "icons/dictionaryIcon.png",
     "default_popup": "popup.html",
-    "default_title": "Sözlük"
+    "default_title": "Turta"
   },
 
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["scripts/jquery.min.js","scripts/translatorFactory.js","scripts/TranslationBubble.js","scripts/TranslationBubbleDoubleColumnAndRow.js","scripts/content.js"],
+      "js": ["scripts/jquery.min.js",
+                "scripts/translatorFactory.js",
+                "scripts/TranslationBubble.js",
+                "scripts/TranslationBubbleDoubleColumnAndRow.js",
+                "scripts/content.js"],
       "css": ["css/main.css"],
       "run_at": "document_end",
       "all_frames": true
