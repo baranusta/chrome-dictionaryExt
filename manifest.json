@@ -25,7 +25,9 @@
     }
   ],
   "background": {
-      "scripts": ["scripts/jquery.min.js","scripts/background.js"],
+      "scripts": [ "scripts/jquery.min.js",
+          "scripts/firebase.js" ,
+          "scripts/background.js"],
       "persistent": false
   },
 
@@ -38,9 +40,15 @@
       "icons/*.jpg"
     ],
 
+    "content_security_policy": "script-src 'self' https://apis.google.com/js/platform.js https://www.gstatic.com/firebasejs/3.6.1/firebase.js; object-src 'self'",
+    "oauth2": {
+            "client_id": "470726396129-9so4ug54cpqrvpd89g18i4367s6j15d2.apps.googleusercontent.com",
+            "scopes": ["profile","email"]
+        }  ,
+        "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwv0MiJpoUN/PS4yK11WPAw+Cz5JKZVfXinkAWvZlVKPMsmIzy/HQGomwYpoHVDbbXPI4hnm0ggU1l+2E671c2WDsHsPpONktMp3P5YMxk4/iKPjP46M0kzBunqGU7+xZCJ5bfRO0++n6HqjY511WkkIQ8FBZ037iGkNeKtNRrKEEirh0gb2gVzOTSQk+tTA0mE84xShnOTtV6dY5Rt/cjxHQIFQN8mF0/Y03RDfUf+93YwTqMjil7oTtn2TSR9rVHMoHGi/JyoDIq8vLxJeBbOaxJc5OBKg9m90n6R9C8bwO1FVXimTn+d6rSQ7IKsmrzqE++FhnISJ/vs7In3eiZwIDAQAB",
   "permissions": [
+    "identity",
     "activeTab",
-    "tabs",
     "https://ajax.googleapis.com/",
     "http://www.tureng.com/"
   ]
