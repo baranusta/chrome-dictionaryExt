@@ -48,7 +48,8 @@
         "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwv0MiJpoUN/PS4yK11WPAw+Cz5JKZVfXinkAWvZlVKPMsmIzy/HQGomwYpoHVDbbXPI4hnm0ggU1l+2E671c2WDsHsPpONktMp3P5YMxk4/iKPjP46M0kzBunqGU7+xZCJ5bfRO0++n6HqjY511WkkIQ8FBZ037iGkNeKtNRrKEEirh0gb2gVzOTSQk+tTA0mE84xShnOTtV6dY5Rt/cjxHQIFQN8mF0/Y03RDfUf+93YwTqMjil7oTtn2TSR9rVHMoHGi/JyoDIq8vLxJeBbOaxJc5OBKg9m90n6R9C8bwO1FVXimTn+d6rSQ7IKsmrzqE++FhnISJ/vs7In3eiZwIDAQAB",
   "permissions": [
     "identity",
-    "activeTab",
+    "alarm",
+    "storage",
     "https://ajax.googleapis.com/",
     "http://www.tureng.com/"
   ]

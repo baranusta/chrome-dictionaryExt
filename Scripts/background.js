@@ -23,15 +23,54 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         return true;
     }
 });
+chrome.runtime.onStartup.addListener(function() {
+    registerForConfigRequest();
+});
 
-    var config = {
-      apiKey: "AIzaSyBLXdjn83IVKp9SDiP_g9zOQJzAlEDzUME",
-      authDomain: "turta-edf3c.firebaseapp.com",
-      databaseURL: "https://turta-edf3c.firebaseio.com",
-      storageBucket: "turta-edf3c.appspot.com",
-      messagingSenderId: "470726396129"
-    };
-    firebase.initializeApp(config);
+
+chrome.runtime.onInstalled.addListener(function(details){
+    if(details.reason == "install"){
+        chrome.storage.sync.set({'value': theValue}, function() {
+              // Notify that we saved.
+              message('Settings saved');
+            });
+    }else if(details.reason == "update"){
+        var thisVersion = chrome.runtime.getManifest().version;
+        console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
+    }
+});
+
+function registerForConfigRequest(){
+    chrome.alarms.create('initialization', {periodInMinutes: 24 * 60, when: Date.now() + 15*1000});
+}
+
+//value period ForflashCardRequest
+function registerForFlashcards(value){
+    chrome.alarms.create('flash_cards', {periodInMinutes: value, when: Date.now() + 15*1000});
+}
+
+
+
+function initializeFirebase(){
+        var config = {
+          apiKey: "AIzaSyBLXdjn83IVKp9SDiP_g9zOQJzAlEDzUME",
+          authDomain: "turta-edf3c.firebaseapp.com",
+          databaseURL: "https://turta-edf3c.firebaseio.com",
+          storageBucket: "turta-edf3c.appspot.com",
+          messagingSenderId: "470726396129"
+        };
+        firebase.initializeApp(config);
+}
+chrome.alarms.onAlarm.addListener(function(alarm) {
+    if(alarm.name == 'initialization'){
+        initializeFirebase();
+        // TODO: getinitial values from firebase
+        registerForFlashcards(30);
+    }
+    else if(alarm.name == 'flash_cards'){
+        // TODO: notification to user
+    }
+});
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
           user.providerData.forEach(function (profile) {
