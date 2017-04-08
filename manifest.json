@@ -41,7 +41,7 @@
       "icons/*.jpg"
     ],
 
-    "content_security_policy": "script-src 'self' https://apis.google.com/js/platform.js https://www.gstatic.com/firebasejs/3.6.1/firebase.js; object-src 'self'",
+    "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
     "oauth2": {
             "client_id": "470726396129-9so4ug54cpqrvpd89g18i4367s6j15d2.apps.googleusercontent.com",
             "scopes": ["profile","email"]

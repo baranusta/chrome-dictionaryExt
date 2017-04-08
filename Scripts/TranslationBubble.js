@@ -85,11 +85,12 @@ class TranslationBubble {
         var button = document.createElement("button");
         button.innerHTML = "Add";
         button.className = "bubbleAdd";
+        var self = this;
         button.addEventListener("click", function () {
             chrome.runtime.sendMessage(
                 {
                     action: "add_word",
-                    word: this.selectedWord
+                    word: self.selectedWord
                     //Tag eklencek
                 }, function (responseText) { });
         });

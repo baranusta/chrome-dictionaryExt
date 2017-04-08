@@ -5,13 +5,13 @@ myBubble = new TranslationBubbleDoubleColumnAndRow();
 document.addEventListener('mouseup', function (e) {
 
     var selected = getSelectedWord(e);
-    if(!selected)
+    if (!selected)
         return;
 
     var rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
     bottom = $(window).height() - rect.top + 4 - window.pageYOffset;
     left = rect.left + (rect.width / 2);
-    myBubble.renderAtNewPosition(bottom,left);
+    myBubble.renderAtNewPosition(bottom, left);
     myBubble.showTranslationResults(selected);
 }, false);
 
@@ -23,11 +23,15 @@ document.addEventListener('mousedown', function (e) {
             var url = element.getAttribute("url");
             var win = window.open(url, '_blank');
             win.focus();
+            myBubble.closeBubble();
         }
-        else if(element.className == "bubbleAdd"){
-
+        else if (element.className == "bubbleAdd") {
+            setTimeout(function () {
+                myBubble.closeBubble();
+            }, 200);
         }
-        myBubble.closeBubble();
+        else
+            myBubble.closeBubble();
     }
 }, false);
 
@@ -43,7 +47,7 @@ isSelectedStringValid = function (selected) {
     return true;
 };
 
-getSelectedWord = function(e){
+getSelectedWord = function (e) {
     var text;
     if (window.getSelection) {
         text = window.getSelection().toString();
@@ -51,11 +55,11 @@ getSelectedWord = function(e){
         text = document.selection.createRange().text;
     }
     //if it is an empty string or ctrl key is not pressing.
-    if(!!text && shouldOpenBubble(e,text) && isSelectedStringValid(text))
-      return text.trim();
+    if (!!text && shouldOpenBubble(e, text) && isSelectedStringValid(text))
+        return text.trim();
     return;
 }
 
-shouldOpenBubble = function(event, selected){
-  return event.ctrlKey && selected.length > 0;
+shouldOpenBubble = function (event, selected) {
+    return event.ctrlKey && selected.length > 0;
 };

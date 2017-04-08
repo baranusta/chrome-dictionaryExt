@@ -28,13 +28,14 @@ class ApiController {
         });
 
     }
-    registerForData(){
+    registerForData() {
         if (firebase.auth().currentUser != null) {
             let self = this;
             var userId = firebase.auth().currentUser.uid
-            var searchCount = firebase.database().ref('users/' + userId + '/searchCount');
-            searchCount.on('value', function(snapshot) {
-                self.searchCount = searchCount;
+            var searchCount = firebase.database().ref('user/' + userId + '/searchCount');
+            searchCount.on('value', function (snapshot) {
+                self.searchCount = snapshot.val() + 1;
+                console.log(self.searchCount);
             });
         }
     }
@@ -73,36 +74,35 @@ class ApiController {
 
     searchedWord(word) {
         if (firebase.auth().currentUser != null) {
-            var userId = firebase.auth().currentUser.uid
-            firebase.database().ref('debug_messages/' + userId).set({
-                message: word
-            });
+            let count = self.searchCount;
+            refUser.update({searchCount: count});
         }
-
     }
 
     addWord(word, tag) {
         if (firebase.auth().currentUser != null) {
             let self = this;
-            if(this.searchCount){
-                var user = firebase.auth().currentUser;
-                firebase.database().ref('user/' + user.uid).set({
-                    name: "wow"
-                    // ,
-                    // searchCount: self.searchCount,
-                    // searches:{}
+            var user = firebase.auth().currentUser;
+            let userName = user.displayName;
+            var refUser = firebase.database().ref('user/' + user.uid);
+            if (this.searchCount === 0) {
+                refUser.set({
+                    name: userName,
+                    searchCount: 0
                 });
             }
-            firebase.database().ref('user/' + user.uid + '/searchCount').set(
-                    self.searchCount
-                    );
-            var newWordRef = firebase.database().ref('user/' + user.uid + '/searches').push();
-            newWordRef.set({
-                tag:tag,
-                priority:0,
-                status:0,
-                word: self.searchedWord
+            var newWordRef = refUser.child('searches/' + word).set({
+                tag: 'tag',
+                priority: 0,
+                status: 0,
+                word: word
             });
         }
+    }
+
+    _debug(message){
+            firebase.database().ref('debug_messages/' + Date()).set({
+                message: word
+            });
     }
 }
