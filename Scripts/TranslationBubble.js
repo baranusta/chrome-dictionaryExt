@@ -1,30 +1,60 @@
 class TranslationBubble {
 
-    constructor(){
-        this.translators = [0,1];
+    constructor() {
+        this.translators = [0, 1];
         this.sentenceProviders = [];
         this.wordLimit = 3;
         this.sentenceLimit = 2;
+        this.selectedWord = "";
+        this.tags = [];
+        this.id = 0;
         this._createBubble();
     }
 
-    setPreferences(translators, sentenceProviders, numberOfWords, numberOfSentences){
+    setPreferences(translators, sentenceProviders, numberOfWords, numberOfSentences) {
         this.translators = translators || this.translators;
         this.sentenceProviders = sentenceProviders || this.sentenceProviders;
-        this.wordLimit = numberOfWords|| this.wordLimit;
+        this.wordLimit = numberOfWords || this.wordLimit;
         this.sentenceLimit = numberOfSentences || this.sentenceLimit;
     }
 
-    showTranslationResults(selected, callBack){
+    showTranslationResults(selected) {
+        this.selectedWord = selected;
+        this._changeVisibility();
+        console.log(4)
+        chrome.runtime.sendMessage({ action: "word_searched", word: this.selectedWord }, function (responseText) { });
+        var i = 0;
+        let self = this;
         for (var value of this.translators) {
-            TranslatorFactory.getTranslator(value).getWords(selected, this.wordLimit, function(results,url) {  });
+            let index = i;
+            i = i + 1;
+            TranslatorFactory.getTranslator(value)
+                .getWords(self.id,selected,
+                this.wordLimit,
+                function (responseId, results, url) {
+                    console.log(5)
+                    if(self.id == responseId)
+                        self.buildForTranslator(index, TranslatorFactory.getTranslator(value), results, url);
+                });
         }
+        i = 0;
         for (var value of this.sentenceProviders) {
-            TranslatorFactory.getSentenceProvider(value).getWords(selected, this.sentenceLimit, callBack);
+            let index = i;
+            i = i + 1;
+            TranslatorFactory.getSentenceProvider(value)
+                .getWords(self.id, selected,
+                this.sentenceLimit,
+                function (responseId, results, url) {
+                    self.buildForSentences(index, TranslatorFactory.getSentenceProvider(value), results, url);
+                });
         }
     }
 
-    renderAtNewPosition(bottom, left){
+    buildForTranslator(index, translator, results, url) { }
+
+    buildForSentences(index, sentenceProvider, results, url) { }
+
+    renderAtNewPosition(bottom, left) {
         left -= (this.bubble.offsetWidth / 2);
         if (left < 0) {
             left = 0;
@@ -33,25 +63,67 @@ class TranslationBubble {
         this.bubble.style.left = left + 'px';
     }
 
-    changeVisibility(){
-        this.bubble.style.visibility = this.bubble.style.visibility == 'hidden' ? 'visible' : 'hidden';
+    closeBubble() {
+        if (this.isVisible()) {
+            this._changeVisibility();
+            this._cleanContent();
+            this.id += 1;
+        }
     }
 
-    _createBubble(){
+    isVisible() { return this.bubble.style.visibility != 'hidden'; }
+
+    _changeVisibility() {
+        this.bubble.style.visibility = !this.isVisible() ? 'visible' : 'hidden';
+    }
+
+    //has to be implemeted by the inheriting classes
+    //It cleans the content
+    _cleanContent() {
+
+    }
+
+    _createAddButton() {
+        var button = document.createElement("button");
+        button.innerHTML = "Add";
+        button.className = "bubbleAdd";
+        button.addEventListener("click", function () {
+            chrome.runtime.sendMessage(
+                {
+                    action: "add_word",
+                    word: this.selectedWord
+                    //Tag eklencek
+                }, function (responseText) { });
+        });
+        return button;
+    }
+
+    _createTagSwitcher() {
+
+    }
+
+    _createBubble() {
         var maxZ = Math.max.apply(null,
-            $.map($('body *'), function(e,n) {
+            $.map($('body *'), function (e, n) {
                 if ($(e).css('position') != 'static')
                     return parseInt($(e).css('z-index')) || 1;
             }));
 
         this.bubble = document.createElement('div');
-        this.bubble.setAttribute('class', 'dictionary-bubble');
+        this.bubble.className = 'dictionary-bubble';
         this.bubble.style.zIndex = maxZ + 1;
         this.bubble.style.visibility = 'hidden';
+
+        this.bubble.btn = this._createAddButton();
+        this.bubble.appendChild(this.bubble.btn);
+        //TODO Tag
+        //this.bubble.appendChild(_createTagSwitcher());
         document.body.appendChild(this.bubble);
+
     }
 
-    _createElement(elemnts, truncateLim, url, logo){
+
+    _createElement(elemnts, truncateLim, url, logo) {
         var container = document.createElement('div');
         var holderForImg = document.createElement('div');
         holderForImg.className = "logoDiv";

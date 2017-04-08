@@ -4,7 +4,7 @@ var TranslatorFactory = (function () {
         {
             name: "Tureng",
             logo: "icons/turenglogo.png",
-            getWords: function (word, number, done, fail) {
+            getWords: function (requestId, word, number, done, fail) {
                 var url = 'http://tureng.com/tr/turkce-ingilizce/' + word;
                 makeRequest(url,function (responseData) {
                     var result = [];
@@ -26,7 +26,7 @@ var TranslatorFactory = (function () {
                             }
                         }
                     }
-                    done(result, url);
+                    done(requestId, result, url);
                 });
             }
         },
@@ -34,7 +34,7 @@ var TranslatorFactory = (function () {
         {
             name: "SesliSozlük",
             logo: "icons/seslisozluk.png",
-            getWords: function (word, number, done, fail) {
+            getWords: function (requestId, word, number, done, fail) {
                 var url = 'https://www.seslisozluk.net/en/what-is-the-meaning-of-' + word;
                 makeRequest(url,function (responseData) {
                     var result = [];
@@ -48,7 +48,7 @@ var TranslatorFactory = (function () {
                                               result.push(elm.innerHTML);}
                         );
                     }
-                    done(result, url);
+                    done(requestId, result, url);
                 });
             }
         }
@@ -57,7 +57,7 @@ var TranslatorFactory = (function () {
     var sentenceProviderOptions = [
         /*OXFORD = {
             name: "Oxford", logo: "icons/oxforddictionary.jpg"
-            , getSentences: function (word, number, done, fail) {
+            , getSentences: function (requestId, word, number, done, fail) {
                 word = word.toLowerCase();
                 var url = 'https://en.oxforddictionaries.com/definition/';
                 makeRequest(url,function (responseData) {
@@ -72,7 +72,7 @@ var TranslatorFactory = (function () {
                         if (sentence)
                             result.push(sentence);
                     });
-                    done(result, url);
+                    done(requestId, result, url);
                 }, word);
             }
         }*/

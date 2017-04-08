@@ -31,11 +31,22 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     else if(request.action == "login"){
         mApiController.startAuth(true);
         return true;
-    }
+    }  
     else if(request.action == "isLoggedIn"){
         callBack(true);
         return true;
+    }  
+    else if(request.action == "word_searched"){
+        console.log('hey')
+        mApiController.searchedWord(request.word);
+        return true;
     }
+    else if(request.action == "add_word"){
+        console.log('hey')
+        mApiController.addWord(request.word);
+        return true;
+    }
+        console.log('how')
 });
 
 chrome.alarms.onAlarm.addListener(function(alarm) {

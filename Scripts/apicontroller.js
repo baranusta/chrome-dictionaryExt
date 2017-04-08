@@ -1,17 +1,20 @@
 class ApiController {
     constructor() {
-        
+        let self = this;
+        self.searchCount = 0;
+
         var config = {
-          apiKey: "AIzaSyBLXdjn83IVKp9SDiP_g9zOQJzAlEDzUME",
-          authDomain: "turta-edf3c.firebaseapp.com",
-          databaseURL: "https://turta-edf3c.firebaseio.com",
-          storageBucket: "turta-edf3c.appspot.com",
-          messagingSenderId: "470726396129"
+            apiKey: "AIzaSyBLXdjn83IVKp9SDiP_g9zOQJzAlEDzUME",
+            authDomain: "turta-edf3c.firebaseapp.com",
+            databaseURL: "https://turta-edf3c.firebaseio.com",
+            storageBucket: "turta-edf3c.appspot.com",
+            messagingSenderId: "470726396129"
         };
         firebase.initializeApp(config);
-        
+
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
+                self.registerForData();
                 user.providerData.forEach(function (profile) {
                     console.log("Sign-in provider: " + profile.providerId);
                     console.log("  Provider-specific UID: " + profile.uid);
@@ -23,6 +26,17 @@ class ApiController {
                 // No user is signed in.
             }
         });
+
+    }
+    registerForData(){
+        if (firebase.auth().currentUser != null) {
+            let self = this;
+            var userId = firebase.auth().currentUser.uid
+            var searchCount = firebase.database().ref('users/' + userId + '/searchCount');
+            searchCount.on('value', function(snapshot) {
+                self.searchCount = searchCount;
+            });
+        }
     }
 
     startAuth(interactive) {
@@ -55,5 +69,40 @@ class ApiController {
         }, function (error) {
             // An error happened.
         })
+    }
+
+    searchedWord(word) {
+        if (firebase.auth().currentUser != null) {
+            var userId = firebase.auth().currentUser.uid
+            firebase.database().ref('debug_messages/' + userId).set({
+                message: word
+            });
+        }
+
+    }
+
+    addWord(word, tag) {
+        if (firebase.auth().currentUser != null) {
+            let self = this;
+            if(this.searchCount){
+                var user = firebase.auth().currentUser;
+                firebase.database().ref('user/' + user.uid).set({
+                    name: "wow"
+                    // ,
+                    // searchCount: self.searchCount,
+                    // searches:{}
+                });
+            }
+            firebase.database().ref('user/' + user.uid + '/searchCount').set(
+                    self.searchCount
+                    );
+            var newWordRef = firebase.database().ref('user/' + user.uid + '/searches').push();
+            newWordRef.set({
+                tag:tag,
+                priority:0,
+                status:0,
+                word: self.searchedWord
+            });
+        }
     }
 }

@@ -3,47 +3,29 @@ class TranslationBubbleDoubleColumnAndRow extends TranslationBubble{
     constructor(){
         super();
         let wordsContainer = document.createElement('div');
-        wordsContainer.setAttribute('class', 'dictionary-words-container');
+        wordsContainer.className = "dictionary-words-container";
 
         this.leftColumn = document.createElement('div');
-        this.leftColumn.setAttribute('class', 'dictionary-leftColumn');
+        this.leftColumn.className = "dictionary-leftColumn";
         wordsContainer.appendChild(this.leftColumn);
 
         this.rightColumn = document.createElement('div');
-        this.rightColumn.setAttribute('class', 'dictionary-rightColumn');
+        this.rightColumn.className = "dictionary-rightColumn";
         wordsContainer.appendChild(this.rightColumn);
 
         this.sentencesContainer = document.createElement('div');
-        this.sentencesContainer.setAttribute('class', 'dictionary-sentences-container');
+        this.sentencesContainer.className = "dictionary-sentences-container";
 
         this.bubble.appendChild(wordsContainer);
         this.bubble.appendChild(this.sentencesContainer);
     }
 
-
-
-    showTranslationResults(selected){
-        this.changeVisibility();
-        let self = this;
-        this.translators.forEach(function(value,i){
-            let translator = TranslatorFactory.getTranslator(value);
-            translator.getWords(selected,
-                                self.wordLimit,
-                                function(results,url) {
-                                    self._createColumns(results, url, translator.logo, i);
-                                });
-        });
-        if(this.sentenceProviders.length >= 1)
-            TranslatorFactory.getSentenceProvider(value).getWords(selected,
-                                                                    self.sentenceLimit,
-                                                                    function(results,url) {
-                                                                         self._createRow(results,url);
-                                                                    });
+    buildForTranslator(index,translator,results,url){
+        this._createColumns(results, url, translator.logo, index)
     }
-
-    closeBubble(){
-        if(this.bubble.style.visibility != 'hidden')
-            this._cleanBubble();
+    
+    buildForSentences(index,sentenceProvider,results,url){
+        this._createRow(results,url);
     }
 
     _createColumns(results, url, logo, columnIndex){
@@ -59,11 +41,10 @@ class TranslationBubbleDoubleColumnAndRow extends TranslationBubble{
         this.sentencesContainer.appendChild(element);
     }
 
-
-    _cleanBubble(){
-        this.changeVisibility();
+    _cleanContent(){
         this._childrenRemover(this.leftColumn);
         this._childrenRemover(this.rightColumn);
         this._childrenRemover(this.sentencesContainer);
     }
+
 }
