@@ -21,7 +21,6 @@ class TranslationBubble {
     showTranslationResults(selected) {
         this.selectedWord = selected;
         this._changeVisibility();
-        console.log(4)
         chrome.runtime.sendMessage({ action: "word_searched", word: this.selectedWord }, function (responseText) { });
         var i = 0;
         let self = this;
@@ -32,7 +31,6 @@ class TranslationBubble {
                 .getWords(self.id,selected,
                 this.wordLimit,
                 function (responseId, results, url) {
-                    console.log(5)
                     if(self.id == responseId)
                         self.buildForTranslator(index, TranslatorFactory.getTranslator(value), results, url);
                 });
