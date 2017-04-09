@@ -74,8 +74,12 @@ class ApiController {
 
     searchedWord(word) {
         if (firebase.auth().currentUser != null) {
-            let count = self.searchCount;
-            refUser.update({searchCount: count});
+            let count = this.searchCount;
+            console.log(firebase.auth().currentUser.uid);
+            console.log(count);
+            firebase.database()
+                    .ref('user/' + firebase.auth().currentUser.uid)
+                    .update({searchCount: count});
         }
     }
 
