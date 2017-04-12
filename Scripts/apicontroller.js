@@ -1,4 +1,5 @@
 class ApiController {
+    // updateRequestAfterDuration ıs a callback function
     constructor() {
         let self = this;
         self.searchCount = 0;
@@ -37,7 +38,21 @@ class ApiController {
                 self.searchCount = snapshot.val() + 1;
                 console.log(self.searchCount);
             });
+
+            firebase.database().ref('config/flashCardReqMin').on('value', function (snapshot) {
+                if (!!self.updateRequestAfterDuration)
+                    self.updateRequestAfterDuration(snapshot.val());
+            });
         }
+    }
+
+    getRequestAfterLimit() { return this.makeRequestAfter; }
+    getUID(addIdToken) {
+        if (!!firebase.auth().currentUser)
+            firebase.auth().currentUser.getToken(/* forceRefresh */ true).then(function (idToken) {
+                addIdToken(idToken);
+            }).catch(function (error) {
+            });
     }
 
     startAuth(interactive) {
@@ -78,8 +93,8 @@ class ApiController {
             console.log(firebase.auth().currentUser.uid);
             console.log(count);
             firebase.database()
-                    .ref('user/' + firebase.auth().currentUser.uid)
-                    .update({searchCount: count});
+                .ref('user/' + firebase.auth().currentUser.uid)
+                .update({ searchCount: count });
         }
     }
 
@@ -104,9 +119,9 @@ class ApiController {
         }
     }
 
-    _debug(message){
-            firebase.database().ref('debug_messages/' + Date()).set({
-                message: word
-            });
+    _debug(message) {
+        firebase.database().ref('debug_messages/' + Date()).set({
+            message: word
+        });
     }
 }
