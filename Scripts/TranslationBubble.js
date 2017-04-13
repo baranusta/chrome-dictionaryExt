@@ -32,7 +32,7 @@ class TranslationBubble {
                 this.wordLimit,
                 function (responseId, results, url) {
                     if(self.id == responseId)
-                        self.buildForTranslator(index, TranslatorFactory.getTranslator(value), results, url);
+                        self.buildForTranslator(index, TranslatorFactory.getTranslator(index), results, url);
                 });
         }
         i = 0;
