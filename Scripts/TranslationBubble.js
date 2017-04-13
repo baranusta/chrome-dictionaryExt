@@ -1,7 +1,7 @@
 class TranslationBubble {
 
     constructor() {
-        this.translators = [0, 1];
+        this.translators = [{from: 0, to: 0, index: 0}, {from: 0, to: 0, index: 1}];
         this.sentenceProviders = [];
         this.wordLimit = 3;
         this.sentenceLimit = 2;
@@ -11,6 +11,7 @@ class TranslationBubble {
         this._createBubble();
     }
 
+    //translator format should be in [{from: 0, to: 0, index: 0}, {from: 0, to: 0, index: 1}] form
     setPreferences(translators, sentenceProviders, numberOfWords, numberOfSentences) {
         this.translators = translators || this.translators;
         this.sentenceProviders = sentenceProviders || this.sentenceProviders;
@@ -27,12 +28,12 @@ class TranslationBubble {
         for (var value of this.translators) {
             let index = i;
             i = i + 1;
-            TranslatorFactory.getTranslator(value)
+            TranslatorFactory.getTranslator(this.translators[index])
                 .getWords(self.id,selected,
                 this.wordLimit,
                 function (responseId, results, url) {
                     if(self.id == responseId)
-                        self.buildForTranslator(index, TranslatorFactory.getTranslator(index), results, url);
+                        self.buildForTranslator(index, TranslatorFactory.getTranslator(self.translators[index]), results, url);
                 });
         }
         i = 0;

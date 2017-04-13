@@ -1,58 +1,67 @@
 
 var TranslatorFactory = (function () {
-    var translatorOptions = [
+    var translators = [
         {
-            name: "Tureng",
-            logo: "icons/turenglogo.png",
-            getWords: function (requestId, word, number, done, fail) {
-                var url = 'http://tureng.com/tr/turkce-ingilizce/' + word;
-                makeRequest(url,function (responseData) {
-                    var result = [];
-                    if(!!responseData)
-                    {
-                        var my_div = $('table#englishResultsTable tbody', $(responseData));
-                        if (my_div.length > 0) {
-                            var myTable = my_div[0].rows;
-                            if (myTable.length > number) {
-                                var i = 3, lim = 6;
-                                for (; i < myTable.length && i < lim; i++) {
-                                    if (myTable[i].cells.length > 3) {
-                                        result.push(myTable[i].cells[3].firstChild.innerHTML);
+            name: 'English',
+            to: [
+                {
+                    name: 'Turkish',
+                    translators: [
+                        {
+                            name: "Tureng",
+                            logo: "icons/turenglogo.png",
+                            getWords: function (requestId, word, number, done, fail) {
+                                var url = 'http://tureng.com/tr/turkce-ingilizce/' + word;
+                                makeRequest(url, function (responseData) {
+                                    var result = [];
+                                    if (!!responseData) {
+                                        var my_div = $('table#englishResultsTable tbody', $(responseData));
+                                        if (my_div.length > 0) {
+                                            var myTable = my_div[0].rows;
+                                            if (myTable.length > number) {
+                                                var i = 3, lim = 6;
+                                                for (; i < myTable.length && i < lim; i++) {
+                                                    if (myTable[i].cells.length > 3) {
+                                                        result.push(myTable[i].cells[3].firstChild.innerHTML);
+                                                    }
+                                                    else {
+                                                        lim++;
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
-                                    else {
-                                        lim++;
+                                    done(requestId, result, url);
+                                });
+                            }
+                        },
+
+                        {
+                            name: "SesliSozlük",
+                            logo: "icons/seslisozluk.png",
+                            getWords: function (requestId, word, number, done, fail) {
+                                var url = 'https://www.seslisozluk.net/en/what-is-the-meaning-of-' + word;
+                                makeRequest(url, function (responseData) {
+                                    var result = [];
+                                    if (!!responseData) {
+                                        $('div.panel-body.sozluk dl:first dd a', $(responseData))
+                                            .each(function (d, elm) {
+                                                if (d >= number) {
+                                                    return;
+                                                }
+                                                result.push(elm.innerHTML);
+                                            }
+                                            );
                                     }
-                                }
+                                    done(requestId, result, url);
+                                });
                             }
                         }
-                    }
-                    done(requestId, result, url);
-                });
-            }
-        },
-
-        {
-            name: "SesliSozlük",
-            logo: "icons/seslisozluk.png",
-            getWords: function (requestId, word, number, done, fail) {
-                var url = 'https://www.seslisozluk.net/en/what-is-the-meaning-of-' + word;
-                makeRequest(url,function (responseData) {
-                    var result = [];
-                    if(!!responseData)
-                    {
-                        $('div.panel-body.sozluk dl:first dd a', $(responseData))
-                                        .each(function (d,elm) {
-                                              if (d >= number) {
-                                                  return;
-                                              }
-                                              result.push(elm.innerHTML);}
-                        );
-                    }
-                    done(requestId, result, url);
-                });
-            }
+                    ]
+                }
+            ]
         }
-    ];
+    ]
 
     var sentenceProviderOptions = [
         /*OXFORD = {
@@ -80,45 +89,49 @@ var TranslatorFactory = (function () {
 
     return {
         getTranslatorOptions: function () {
-            return translatorOptions;
+            return translators;
         },
         getSentenceProviderOptions: function () {
             return sentenceProviderOptions;
         },
-
-        getTranslator: function (index) {
-            return translatorOptions[index];
+        /**
+         * returns the required translator.
+         * @constructor
+         * @param {object} translator - its format has to be {from: 0, to: 0, index: 0}.
+         */
+        getTranslator: function (translator) {
+            return translators[translator.from]['to'][translator.to]['translators'][translator.index];
         },
 
-        getSentenceProvider(index){
+        getSentenceProvider(index) {
             return sentenceProviderOptions[index];
         }
     }
 })();
 
-function makeRequest(url,callback,word){
-  chrome.runtime.sendMessage({
-    method: 'GET',
-    action: 'xhttp',
-    url: url,
-    word: word
-  }, function(responseText) {
+function makeRequest(url, callback, word) {
+    chrome.runtime.sendMessage({
+        method: 'GET',
+        action: 'xhttp',
+        url: url,
+        word: word
+    }, function (responseText) {
         responseText = responseText.replace(/<video\b[^>]*>/ig, '');
         responseText = responseText.replace(/<img\b[^>]*>/ig, '');
         responseText = responseText.replace(/<audio\b[^>]*>/ig, '');
         responseText = stripScripts(responseText);
         callback(responseText);
-    /*Callback function to deal with the response*/
-  });
+        /*Callback function to deal with the response*/
+    });
 }
 
 function stripScripts(s) {
-  var div = document.createElement('div');
-  div.innerHTML = s;
-  var scripts = div.getElementsByTagName('script');
-  var i = scripts.length;
-  while (i--) {
-    scripts[i].parentNode.removeChild(scripts[i]);
-  }
-  return div.innerHTML;
+    var div = document.createElement('div');
+    div.innerHTML = s;
+    var scripts = div.getElementsByTagName('script');
+    var i = scripts.length;
+    while (i--) {
+        scripts[i].parentNode.removeChild(scripts[i]);
+    }
+    return div.innerHTML;
 }
