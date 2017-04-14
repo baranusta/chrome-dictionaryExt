@@ -4,8 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-$(".LoginButton").click(function () {
-	console.log('request_sent');
+var searchText = $("#search_word");
+
+$("#btnNextCard").click(function () {
+	bubble.closeBubble();
 	//show something like loader
 
 	chrome.runtime.sendMessage({
@@ -26,3 +28,12 @@ $(".LoginButton").click(function () {
 		}
 	});
 });
+
+$("#btnSearch").click(function () {
+	bubble.closeBubble();
+	bubble.renderAtNewPosition(0, 0);
+	bubble.setVisibilityAddSection("visible");
+	bubble.showTranslationResults(searchText.val().trim());
+			
+});
+
