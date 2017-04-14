@@ -4,13 +4,20 @@ class TranslationBubbleDoubleColumnAndRow extends TranslationBubble{
         super();
         let wordsContainer = document.createElement('div');
         wordsContainer.className = "dictionary-words-container";
+        wordsContainer.style.display = 'flex';
+        wordsContainer.style.padding = '10px';
 
         this.leftColumn = document.createElement('div');
         this.leftColumn.className = "dictionary-leftColumn";
+        this.leftColumn.style.position = 'relative';
+        this.leftColumn.style.width = '50%';
         wordsContainer.appendChild(this.leftColumn);
 
         this.rightColumn = document.createElement('div');
         this.rightColumn.className = "dictionary-rightColumn";
+        this.rightColumn.style.position = 'relative';
+        this.rightColumn.style.width = '50%';
+        this.rightColumn.style.paddingLeft = '5px';
         wordsContainer.appendChild(this.rightColumn);
 
         this.sentencesContainer = document.createElement('div');

@@ -2,13 +2,7 @@ body {
     font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
     font-size: 100%;
 }
-#status {
-    /* avoid an excessively wide status text */
-    white-space: pre;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    max-width: 400px;
-}
+
 .dictionary-bubble{
     visibility: hidden;
     position: absolute;
@@ -24,19 +18,7 @@ body {
   	box-shadow: 2px 2px 4px #888;
 }
 
-.dictionary-words-container{
-    display: flex;
-    padding: 10px;
-}
-.dictionary-leftColumn{
-  position: relative;
-    width: 50%;
-}
-.dictionary-rightColumn{
-  position: relative;
-  padding-left: 5px;
-    width: 50%;
-}
+li span { position: relative; left: -12px; }
 
 .dictionary-sentences-container{
   position: relative;

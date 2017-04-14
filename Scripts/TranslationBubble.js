@@ -1,7 +1,7 @@
 class TranslationBubble {
 
     constructor() {
-        this.translators = [{from: 0, to: 0, index: 0}, {from: 0, to: 0, index: 1}];
+        this.translators = [{ from: 0, to: 0, index: 0 }, { from: 0, to: 0, index: 1 }];
         this.sentenceProviders = [];
         this.wordLimit = 3;
         this.sentenceLimit = 2;
@@ -29,10 +29,10 @@ class TranslationBubble {
             let index = i;
             i = i + 1;
             TranslatorFactory.getTranslator(this.translators[index])
-                .getWords(self.id,selected,
+                .getWords(self.id, selected,
                 this.wordLimit,
                 function (responseId, results, url) {
-                    if(self.id == responseId)
+                    if (self.id == responseId)
                         self.buildForTranslator(index, TranslatorFactory.getTranslator(self.translators[index]), results, url);
                 });
         }
@@ -61,7 +61,13 @@ class TranslationBubble {
         this.bubble.style.bottom = bottom + 'px';
         this.bubble.style.left = left + 'px';
     }
-
+    
+    setVisibilityAddSection(visibility){
+        //TO-DO
+        //this should not be only button, also tag should be changed
+        this.bubble.btn.style.visibility = visibility;
+    }
+    
     closeBubble() {
         if (this.isVisible()) {
             this._changeVisibility();
@@ -143,6 +149,7 @@ class TranslationBubble {
                 else {
                     childElm.innerHTML = child;
                 }
+                childElm.innerHTML = '<span>' + childElm.innerHTML + '<span>';
                 container.appendChild(childElm);
             }
             var urlElmnt = document.createElement('p');
