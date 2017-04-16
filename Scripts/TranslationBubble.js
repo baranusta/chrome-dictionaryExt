@@ -119,6 +119,7 @@ class TranslationBubble {
         this.bubble.className = 'dictionary-bubble';
         this.bubble.style.zIndex = maxZ + 1;
         this.bubble.style.visibility = 'hidden';
+        this.bubble.style.overflow = 'hidden';
 
         this.bubble.btn = this._createAddButton();
         this.bubble.appendChild(this.bubble.btn);

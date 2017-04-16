@@ -8,6 +8,7 @@
 
 <head>
 	<title>Getting Started Extension's Popup</title>
+	<link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
 	<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" type="text/css" href="./css/popup.css">
 </head>
@@ -18,16 +19,15 @@
 	<script type="text/javascript" src="Scripts/TranslationBubble.js"></script>
 	<script type="text/javascript" src="Scripts/TranslationBubbleDoubleColumnAndRow.js"></script>
 	<h2 style="text-align: center;">Turta/turtis</h2>
-	<div id='top' style="height: 100px;">
+	<div id='top'>
 		<p style="float:left; vertical-align: top; margin-top:50px;">Statistics about user will come here</p>
 		<input type="image" style="position: absolute; vertical-align: top; right: 10px; width: 20px; height: 20px;" src="./icons/ic_set.png" />
 	</div>
 	<div id='bottom'>
-		
-        <input id="search_word" type="text" style="text-align:center;" />
+        <input id="search_word" type="text" />
 		<button id="btnSearch" type="Button">search</button>
-	
-		<button id="btnNextCard" type="Button">wow</button>
+		<div id='flashCard'></div>
+		<button id="btnNextCard" class="pure-button pure-button-primary" type="Button">wow</button>
 	</div>
 	<script type="text/javascript" src="popup.js"></script>
 </body>
