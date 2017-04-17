@@ -1,22 +1,20 @@
 var bubble = new TranslationBubbleDoubleColumnAndRow();
+var width;
 
 $(document).ready(function () {
 	$('#bottom').append($('.dictionary-bubble'));
 	flashCard.hide();
+	var htmlStyles = window.getComputedStyle(document.querySelector("html"));
+	width = htmlStyles.getPropertyValue("--width"); // returns "#f00"
 });
 
 var searchText = $("#search_word");
 var flashCard = $('#bottom #flashCard');
 var cardWord = null;
 
-function animateBtnNextCard() {
-	//var btn = document.getElementById("btnNextCard");
-	console.log($("#btnNextCard").css('top'));
-	var btn = $("#btnNextCard").animate({ top: '220px' });
-}
 
 $("#btnNextCard").click(function () {
-	animateBtnNextCard();
+	$("#btnNextCard").animate({ top: '220px' });
 	bubble.closeBubble();
 	//show something like loader
 
@@ -32,6 +30,8 @@ $("#btnNextCard").click(function () {
 			cardWord = responseText.word;
 		}
 		else {
+			//burda baska ihtimaller de var onu response objesine
+			//eklenen baska parametrelerle saapabiliriz
 			flashCard.html("hakkin bitmis amaa :'(");
 			cardWord = null;
 		}
@@ -45,6 +45,12 @@ $("#btnSearch").click(function () {
 	bubble.setVisibilityAddSection("visible");
 	bubble.showTranslationResults(searchText.val().trim());
 
+});
+
+$("#btnSettings").click(function () {
+	var num = parseInt(width.replace( /^\D+/g, ''));
+	$('.content').animate({left:-num},500,function(){console.log('done1');});
+	$('#settings_menu').animate({left:0},500,function(){console.log('done');});
 });
 
 flashCard.click(function () {
