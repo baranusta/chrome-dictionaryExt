@@ -63,14 +63,14 @@ overflow: hidden;
     left: 40%;
 }
 
-li {
+.translated-words li {
     font-family: 'Lato', sans-serif;
     font-size:14px;
     list-style-type: circle;
     list-style-position:outside;
 }
 
-li span { position: relative; left: -12px; }
+.translated-words li span { position: relative; left: -12px; }
 
 .logoDiv{
   position: relative;
