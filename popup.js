@@ -2,19 +2,28 @@ var bubble = new TranslationBubbleDoubleColumnAndRow();
 var width;
 
 $(document).ready(function () {
+	//sets outlook
 	$('#bottom').append($('.dictionary-bubble'));
 	flashCard.hide();
+
+	//sets globals
 	var htmlStyles = window.getComputedStyle(document.querySelector("html"));
 	width = htmlStyles.getPropertyValue("--width"); // returns "#f00"
+
+	//sets parameters
+	bubble.setAddbtnResultListener(function(){window.close();});
 });
 
 var searchText = $("#search_word");
 var flashCard = $('#bottom #flashCard');
 var cardWord = null;
 
+function animatebtnNextCard(){
+	$("#btnNextCard").animate({ top: '220px' });
+}
 
 $("#btnNextCard").click(function () {
-	$("#btnNextCard").animate({ top: '220px' });
+	animatebtnNextCard();
 	bubble.closeBubble();
 	//show something like loader
 
@@ -40,6 +49,7 @@ $("#btnNextCard").click(function () {
 });
 
 $("#btnSearch").click(function () {
+	animatebtnNextCard();
 	bubble.closeBubble();
 	bubble.renderAtNewPosition(0, 0);
 	bubble.setVisibilityAddSection("visible");

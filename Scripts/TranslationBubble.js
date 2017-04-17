@@ -61,13 +61,17 @@ class TranslationBubble {
         this.bubble.style.bottom = bottom + 'px';
         this.bubble.style.left = left + 'px';
     }
-    
-    setVisibilityAddSection(visibility){
+
+    setVisibilityAddSection(visibility) {
         //TO-DO
         //this should not be only button, also tag should be changed
         this.bubble.btn.style.visibility = visibility;
     }
-    
+
+    setAddbtnResultListener(func) {
+        this.addBtnResultListener = func;
+    }
+
     closeBubble() {
         if (this.isVisible()) {
             this._changeVisibility();
@@ -94,6 +98,10 @@ class TranslationBubble {
         button.className = "bubbleAdd";
         var self = this;
         button.addEventListener("click", function () {
+
+            if (self.addBtnResultListener)
+                self.addBtnResultListener();
+
             chrome.runtime.sendMessage(
                 {
                     action: "add_word",
