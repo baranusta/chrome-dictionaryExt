@@ -140,6 +140,7 @@ class TranslationBubble {
 
     _createElement(elemnts, truncateLim, url, logo) {
         var container = document.createElement('div');
+        container.className = 'translated-words';
         var holderForImg = document.createElement('div');
         holderForImg.className = "logoDiv";
         var img = document.createElement('img'); // width, height values are optional params

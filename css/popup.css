@@ -15,12 +15,14 @@ overflow: hidden;
 }
 
 .content{
+    width: var(--width);
     position: absolute;
     left: 0px;
 }
 #top{
     position: relative;
     height: 150px;
+    max-width: var(--width);
 }
 
 
@@ -47,6 +49,7 @@ overflow: hidden;
 
 #bottom #dictionary-bubble{
     background-color: white;
+    max-width: var(--width);
 }
 
 #btnSettings{
@@ -57,10 +60,47 @@ overflow: hidden;
     height: 20px;
 }
 
+#btnBack{
+    width: 20px; 
+    height: 20px;
+}
+
 #btnNextCard{
     position: absolute;
     top: 30%;
     left: 40%;
+}
+
+#btnSave{
+    float: right;
+}
+
+div#settings_menu{
+    margin: 10px;
+}
+.bubbleType{
+    width: var(--width);
+    overflow-x: auto;
+    white-space: nowrap;
+}
+.bubbleType div{
+    display: inline;
+    max-height: 50px;
+    max-width: 500px; 
+}
+
+.bubbleType div div{
+    width: 60px;
+    height: 30px;
+}
+
+.bubbleType img{
+    margin-right: 10px;
+    margin-top: 10px;
+    max-width: 60px; 
+    max-height: 30px; 
+    width:  auto;
+    height: auto;
 }
 
 .translated-words li {

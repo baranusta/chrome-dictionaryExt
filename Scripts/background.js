@@ -57,6 +57,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, callback) {
         mApiController.addWord(request.word);
         return true;
     }
+    else if (request.action == "config") {
+        callback('lol');
+        return true;
+    }
 });
 
 chrome.alarms.onAlarm.addListener(function (alarm) {

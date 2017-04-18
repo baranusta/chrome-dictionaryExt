@@ -1,27 +1,67 @@
-var bubble = new TranslationBubbleDoubleColumnAndRow();
+var bubble;
 var width;
+var bubbleConfig;
 
 $(document).ready(function () {
-	//sets outlook
-	$('#bottom').append($('.dictionary-bubble'));
-	flashCard.hide();
 
 	//sets globals
 	var htmlStyles = window.getComputedStyle(document.querySelector("html"));
 	width = htmlStyles.getPropertyValue("--width"); // returns "#f00"
 
-	//sets parameters
-	bubble.setAddbtnResultListener(function(){window.close();});
+	chrome.runtime.sendMessage({ action: "config" }, function (response) {
+		bubble = new TranslationBubbleDoubleColumnAndRow();
+		//sets parameters
+		bubble.setAddbtnResultListener(function () { window.close(); });
+
+
+		//sets outlook
+		$('#bottom').append($('.dictionary-bubble'));
+		flashCard.hide();
+		addBubbleOptions(registeredBubbles);
+
+
+	});
 });
 
 var searchText = $("#search_word");
 var flashCard = $('#bottom #flashCard');
 var cardWord = null;
 
-function animatebtnNextCard(){
+
+/* HELPER FUNCTIONS */
+function animatebtnNextCard() {
 	$("#btnNextCard").animate({ top: '220px' });
 }
 
+function addBubbleOptions(bubbles) {
+	let containerDiv = $('.bubbleType div');
+	console.log(bubbles)
+	for (var index in bubbles) {
+		var bubble = bubbles[index];
+		if (bubble.hasOwnProperty('value')) {
+			var div = $('<div></div>');
+			$('<input type="radio" name="bubble_type" value="' + bubble.value + '" />').appendTo(div);
+			$('<img src="' + bubble.image + '">').appendTo(div);
+			div.appendTo(containerDiv);
+		}
+	}
+}
+
+//isback null or false, next content comes in
+function slideWithDiv(div, isBack) {
+	var num = parseInt(width.replace(/^\D+/g, ''));
+	if (isBack) {
+		$('.content').animate({ left: 0 }, 500);
+		$('#settings_menu').animate({ left: num }, 500);
+	}
+	else {
+		$('.content').animate({ left: -num }, 500);
+		div.animate({ left: 0 }, 500);
+	}
+
+}
+
+/* CLICK LISTENERS */
 $("#btnNextCard").click(function () {
 	animatebtnNextCard();
 	bubble.closeBubble();
@@ -49,18 +89,27 @@ $("#btnNextCard").click(function () {
 });
 
 $("#btnSearch").click(function () {
-	animatebtnNextCard();
-	bubble.closeBubble();
-	bubble.renderAtNewPosition(0, 0);
-	bubble.setVisibilityAddSection("visible");
-	bubble.showTranslationResults(searchText.val().trim());
-
+	if (searchText.val().trim().length !== 0) {
+		animatebtnNextCard();
+		bubble.closeBubble();
+		bubble.renderAtNewPosition(0, 0);
+		bubble.setVisibilityAddSection("visible");
+		bubble.showTranslationResults(searchText.val().trim());
+	}
 });
 
 $("#btnSettings").click(function () {
-	var num = parseInt(width.replace( /^\D+/g, ''));
-	$('.content').animate({left:-num},500,function(){console.log('done1');});
-	$('#settings_menu').animate({left:0},500,function(){console.log('done');});
+	slideWithDiv($('#settings_menu'));
+});
+
+$("#btnBack").click(function () {
+	slideWithDiv($('#settings_menu'), true);
+});
+
+$("#btnSave").click(function () {
+	slideWithDiv($('#settings_menu'), true);
+	//save settings.
+
 });
 
 flashCard.click(function () {
@@ -70,6 +119,13 @@ flashCard.click(function () {
 		bubble.setVisibilityAddSection('hidden');
 		bubble.bubble.style.maxHeight = '200px';
 		bubble.showTranslationResults(cardWord);
+	}
+});
+
+$("input[type='radio']").click(function () {
+	var radioValue = $("input[name='bubble_type']:checked").val();
+	if (radioValue) {
+
 	}
 });
 
