@@ -27,6 +27,7 @@
   "background": {
       "scripts": [ "scripts/jquery.min.js",
           "scripts/firebase.js" ,
+          "scripts/constructors.js",
           "scripts/apicontroller.js",
           "scripts/background.js"],
       "persistent": false

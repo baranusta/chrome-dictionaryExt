@@ -16,6 +16,7 @@
 
 <body>
 	<script type="text/javascript" src="scripts/jquery.min.js"></script>
+	<script type="text/javascript" src="Scripts/constructors.js"></script>
 	<script type="text/javascript" src="Scripts/translatorFactory.js"></script>
 	<script type="text/javascript" src="Scripts/TranslationBubble.js"></script>
 	<script type="text/javascript" src="Scripts/TranslationBubbleDoubleColumnAndRow.js"></script>
@@ -42,7 +43,20 @@
 				</div>
 			</div>
 			<div>
-				Settings of the Bubble Type:
+				Translators of this Bubble<br>
+				<div class='translator-option-from'>
+					From:
+					<select id='ddFrom'>
+					</select>
+				</div>
+				<div class='translator-option-to'>
+					To:
+					<select id='ddTo'>
+					</select>
+				</div>
+				<div class='translator-options'>
+					
+				</div>
 			</div>
 			<button id="btnSave" class="pure-button pure-button-primary" type="Button">Save</button
 		</div>

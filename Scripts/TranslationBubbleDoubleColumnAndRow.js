@@ -34,6 +34,13 @@ class TranslationBubbleDoubleColumnAndRow extends TranslationBubble{
     buildForSentences(index,sentenceProvider,results,url){
         this._createRow(results,url);
     }
+    getRequiredWordTranslatorCount(){
+        return 2;
+    }
+
+    getRequiredSentenceTranslatorCount(){
+        return 0;
+    }
 
     _createColumns(results, url, logo, columnIndex){
         let element = this._createElement(results, 50, url, logo);

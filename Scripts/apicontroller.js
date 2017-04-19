@@ -3,6 +3,7 @@ class ApiController {
     constructor() {
         let self = this;
         self.searchCount = 0;
+        self.userConfig = null;
 
         var config = {
             apiKey: "AIzaSyBLXdjn83IVKp9SDiP_g9zOQJzAlEDzUME",
@@ -33,10 +34,15 @@ class ApiController {
         if (firebase.auth().currentUser != null) {
             let self = this;
             var userId = firebase.auth().currentUser.uid
-            var searchCount = firebase.database().ref('user/' + userId + '/searchCount');
-            searchCount.on('value', function (snapshot) {
+            firebase.database().ref('user/' + userId + '/searchCount').on('value', function (snapshot) {
                 self.searchCount = snapshot.val() + 1;
                 console.log(self.searchCount);
+            });
+
+            firebase.database().ref('user/' + userId + '/config').on('value', function (snapshot) {
+                self.userConfig = snapshot.val();
+                console.log("userConfig:");
+                console.log( self.userConfig);
             });
 
             firebase.database().ref('config/flashCardReqMin').on('value', function (snapshot) {
@@ -46,6 +52,7 @@ class ApiController {
         }
     }
 
+    getUserConfig(){return this.userConfig;}
     getRequestAfterLimit() { return this.makeRequestAfter; }
     getUID(addIdToken) {
         if (!!firebase.auth().currentUser)
@@ -100,14 +107,14 @@ class ApiController {
 
     addWord(word, tag) {
         if (firebase.auth().currentUser != null) {
-            let self = this;
             var user = firebase.auth().currentUser;
             let userName = user.displayName;
             var refUser = firebase.database().ref('user/' + user.uid);
             if (this.searchCount === 0) {
                 refUser.set({
                     name: userName,
-                    searchCount: 0
+                    searchCount: 0,
+                    config: default_config
                 });
             }
             var newWordRef = refUser.child('searches/' + word).set({
@@ -116,6 +123,14 @@ class ApiController {
                 status: 0,
                 word: word
             });
+        }
+    }
+
+    saveConfig(bubbleConfig){
+        if (firebase.auth().currentUser != null) {
+            var user = firebase.auth().currentUser;
+            var refUser = firebase.database().ref('user/' + user.uid + '/config');
+            refUser.update({bubble_config: bubbleConfig});
         }
     }
 

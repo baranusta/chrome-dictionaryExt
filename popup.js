@@ -1,4 +1,5 @@
-var bubble;
+var bubble, tempBubble;
+var bubbleValue;
 var width;
 var bubbleConfig;
 
@@ -8,8 +9,13 @@ $(document).ready(function () {
 	var htmlStyles = window.getComputedStyle(document.querySelector("html"));
 	width = htmlStyles.getPropertyValue("--width"); // returns "#f00"
 
-	chrome.runtime.sendMessage({ action: "config" }, function (response) {
-		bubble = new TranslationBubbleDoubleColumnAndRow();
+	chrome.runtime.sendMessage({ action: "get_bubble_config" }, function (response) {
+		if (!response)
+			response = default_config.bubble_config;
+
+		bubble = TranslationBubbleFactory.getBubble(response.bubbleType)
+		bubbleValue = response.bubbleType;
+		tempBubble = bubble;
 		//sets parameters
 		bubble.setAddbtnResultListener(function () { window.close(); });
 
@@ -17,8 +23,10 @@ $(document).ready(function () {
 		//sets outlook
 		$('#bottom').append($('.dictionary-bubble'));
 		flashCard.hide();
-		addBubbleOptions(registeredBubbles);
-
+		$('.translator-option-to').hide();
+		$('.translator-options').hide();
+		addBubbleOptions(TranslationBubbleFactory.bubbles(), bubbleValue);
+		fillFromOptions(TranslatorFactory.getTranslatorOptions());
 
 	});
 });
@@ -33,18 +41,62 @@ function animatebtnNextCard() {
 	$("#btnNextCard").animate({ top: '220px' });
 }
 
-function addBubbleOptions(bubbles) {
+function addBubbleOptions(bubbles, checkedBubbleValue) {
 	let containerDiv = $('.bubbleType div');
-	console.log(bubbles)
 	for (var index in bubbles) {
 		var bubble = bubbles[index];
 		if (bubble.hasOwnProperty('value')) {
 			var div = $('<div></div>');
-			$('<input type="radio" name="bubble_type" value="' + bubble.value + '" />').appendTo(div);
+			if (checkedBubbleValue === bubble.value)
+				$('<input type="radio" name="bubble_type" value="' + bubble.value + '" checked />').appendTo(div);
+			else
+				$('<input type="radio" name="bubble_type" value="' + bubble.value + '" />').appendTo(div);
 			$('<img src="' + bubble.image + '">').appendTo(div);
 			div.appendTo(containerDiv);
 		}
 	}
+}
+
+
+function fillFromOptions(translatorOptions) {
+	for (var index = 0; index < translatorOptions.length; index++) {
+		var element = translatorOptions[index];
+		$('#ddFrom').append($('<option value="' + index + '">' + element.name + '</option>'));
+	}
+	if (translatorOptions.length === 1) {
+		$('#ddFrom').prop('disabled', true);
+		$('.translator-option-to').show();
+		fillToOptions(translatorOptions[0]['to']);
+	}
+}
+
+function fillToOptions(translatorOptionTo) {
+	for (var index = 0; index < translatorOptionTo.length; index++) {
+		var element = translatorOptionTo[index];
+		console.log(element);
+		$('#ddTo').append($('<option value="' + index + '">' + element.name + '</option>'));
+	}
+	if (translatorOptionTo.length === 1) {
+		$('#ddTo').prop('disabled', true);
+		$('.translator-options').show();
+		addDictionaryOptions(bubble.getRequiredWordTranslatorCount(),
+			bubble.getRequiredSentenceTranslatorCount(),
+			translatorOptionTo[0].translators);
+	}
+}
+
+function addDictionaryOptions(wordTranslatorcount, sentenceTranslatorCount, dictionaries) {
+	var elementBase = '<select id="word_translator_0">';
+	for (var i = 0; i < wordTranslatorcount; i++) {
+		var element = elementBase.replace('0', i + '');
+		for (var index = 0; index < dictionaries.length; index++) {
+			var translator = dictionaries[index];
+			element = element + '<option value="' + index + '">' + translator.name + '</option>';
+		}
+		$('.translator-options').append($('<label>Word Translator ' + (i + 1) + ': </label><br>'));
+		$('.translator-options').append($(element +  '</select><br>'));
+	}
+	//Sentence not supported yet
 }
 
 //isback null or false, next content comes in
@@ -59,6 +111,11 @@ function slideWithDiv(div, isBack) {
 		div.animate({ left: 0 }, 500);
 	}
 
+}
+
+function addSelectedTranslatorNames(bubbleConfig) {
+	bubbleConfig['translator_1'] = 'tureng';
+	bubbleConfig['translator_2'] = 'seslisozluk';
 }
 
 /* CLICK LISTENERS */
@@ -108,8 +165,21 @@ $("#btnBack").click(function () {
 
 $("#btnSave").click(function () {
 	slideWithDiv($('#settings_menu'), true);
-	//save settings.
+	bubble = tempBubble;
+	var bubbleConfig = {
+		bubbleType: bubbleValue,
+		language: {
+			from: 'eng',
+			to: 'tr'
+		}
+	};
 
+	addSelectedTranslatorNames(bubbleConfig);
+
+	chrome.runtime.sendMessage({
+		action: "save_bubble_config",
+		bubble_config: bubbleConfig
+	}, function (response) { });
 });
 
 flashCard.click(function () {
@@ -125,7 +195,11 @@ flashCard.click(function () {
 $("input[type='radio']").click(function () {
 	var radioValue = $("input[name='bubble_type']:checked").val();
 	if (radioValue) {
-
+		bubbleValue = radioValue;
+		tempBubble = TranslationBubbleFactory.getBubble(radioValue);
 	}
 });
 
+$("#ddFrom").change(function (index) {
+	console.log(index);
+});

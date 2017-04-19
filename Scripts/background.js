@@ -57,8 +57,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, callback) {
         mApiController.addWord(request.word);
         return true;
     }
-    else if (request.action == "config") {
-        callback('lol');
+    else if (request.action == "get_bubble_config") {
+        callback(mApiController.getUserConfig()? mApiController.getUserConfig().bubble_config : null);
+        return true;
+    }    
+    else if (request.action == "save_bubble_config") {
+        mApiController.saveConfig(request.bubble_config);
         return true;
     }
 });
@@ -68,8 +72,8 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
         console.log(requestAfterDuration)
         setUnread(2);
         //if the duration has changed, update the alarm.
-        if (requestAfterDuration != alarm.periodInMinutes)
-            registerForFlashcards();
+        //if (requestAfterDuration != alarm.periodInMinutes)
+            //registerForFlashcards();
     }
 });
 
@@ -83,7 +87,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
     } else if (details.reason == "update") {
         var thisVersion = chrome.runtime.getManifest().version;
         console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
-        registerForFlashcards();
+        //registerForFlashcards();
     }
 });
 
