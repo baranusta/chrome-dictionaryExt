@@ -2,6 +2,7 @@ mApiController = new ApiController()
 mApiController.updateRequestAfterDuration = updateRequestAfterDuration;
 debug = true
 requestAfterDuration = 15;
+var bubbleConfig;
 
 
 
@@ -58,11 +59,24 @@ chrome.runtime.onMessage.addListener(function (request, sender, callback) {
         return true;
     }
     else if (request.action == "get_bubble_config") {
-        callback(mApiController.getUserConfig()? mApiController.getUserConfig().bubble_config : null);
+        bubbleConfig = mApiController.getUserConfig()? 
+                        mApiController.getUserConfig().bubble_config : 
+                        default_config.bubble_config;
+        callback(bubbleConfig);
         return true;
     }    
     else if (request.action == "save_bubble_config") {
+        bubbleConfig = request.bubble_config;
         mApiController.saveConfig(request.bubble_config);
+        return true;
+    } 
+    else if (request.action == "bubble_config") {
+        //This request is done before every word search by content.js
+        bubbleConfig = bubbleConfig||
+                        mApiController.getUserConfig()? 
+                        mApiController.getUserConfig().bubble_config : 
+                        default_config.bubble_config;
+        callback(bubbleConfig);
         return true;
     }
 });

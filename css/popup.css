@@ -72,7 +72,9 @@ overflow: hidden;
 }
 
 #btnSave{
-    float: right;
+    position: absolute;
+    left: 35%;
+    bottom: 75px;
 }
 
 div#settings_menu{

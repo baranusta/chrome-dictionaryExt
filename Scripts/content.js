@@ -1,4 +1,4 @@
-myBubble = new TranslationBubbleDoubleColumnAndRow();
+var myBubble;
 
 
 // Lets listen to mouseup DOM events.
@@ -11,14 +11,19 @@ document.addEventListener('mouseup', function (e) {
     var rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
     bottom = $(window).height() - rect.top + 4 - window.pageYOffset;
     left = rect.left + (rect.width / 2);
-    myBubble.renderAtNewPosition(bottom, left);
-    myBubble.showTranslationResults(selected);
+
+    chrome.runtime.sendMessage({ action: "bubble_config"}, function (responseText) {
+		myBubble = TranslationBubbleFactory.getBubble(responseText.bubbleType)
+        myBubble.setPreferences(responseText.preferences);
+        myBubble.renderAtNewPosition(bottom, left);
+        myBubble.showTranslationResults(selected);
+    });
 }, false);
 
 // Close the bubble when we click on the screen.
 document.addEventListener('mousedown', function (e) {
     var element = (e.target || e.srcElement);
-    if (myBubble.isVisible() && element) {
+    if (myBubble && myBubble.isVisible() && element) {
         if (element.className == "urlText") {
             var url = element.getAttribute("url");
             var win = window.open(url, '_blank');

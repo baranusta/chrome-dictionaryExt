@@ -37,7 +37,7 @@ var TranslatorFactory = (function () {
                         },
 
                         {
-                            name: "SesliSozlük",
+                            name: "SesliSozluk",
                             logo: "icons/seslisozluk.png",
                             getWords: function (requestId, word, number, done, fail) {
                                 var url = 'https://www.seslisozluk.net/en/what-is-the-meaning-of-' + word;
@@ -102,7 +102,14 @@ var TranslatorFactory = (function () {
         getTranslator: function (translator) {
             return translators[translator.from]['to'][translator.to]['translators'][translator.index];
         },
-
+        /**
+        * returns the required translator.
+        * @constructor
+        * @param {object} translator - its format has to be {from: 0, to: 0}.
+        */
+        getDictionaryOptions: function (translator) {
+            return translators[translator.from]['to'][translator.to]['translators'];
+        },
         getSentenceProvider(index) {
             return sentenceProviderOptions[index];
         }

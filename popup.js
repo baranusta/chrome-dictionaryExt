@@ -10,10 +10,8 @@ $(document).ready(function () {
 	width = htmlStyles.getPropertyValue("--width"); // returns "#f00"
 
 	chrome.runtime.sendMessage({ action: "get_bubble_config" }, function (response) {
-		if (!response)
-			response = default_config.bubble_config;
 
-		bubble = TranslationBubbleFactory.getBubble(response.bubbleType)
+		bubble = TranslationBubbleFactory.getBubble(response.bubbleType);
 		bubbleValue = response.bubbleType;
 		tempBubble = bubble;
 		//sets parameters
@@ -23,10 +21,11 @@ $(document).ready(function () {
 		//sets outlook
 		$('#bottom').append($('.dictionary-bubble'));
 		flashCard.hide();
+		$('#config_save_error').hide();
 		$('.translator-option-to').hide();
 		$('.translator-options').hide();
 		addBubbleOptions(TranslationBubbleFactory.bubbles(), bubbleValue);
-		fillFromOptions(TranslatorFactory.getTranslatorOptions());
+		fill_FromOptions(TranslatorFactory.getTranslatorOptions());
 
 	});
 });
@@ -58,19 +57,19 @@ function addBubbleOptions(bubbles, checkedBubbleValue) {
 }
 
 
-function fillFromOptions(translatorOptions) {
+function fill_FromOptions(translatorOptions) {
 	for (var index = 0; index < translatorOptions.length; index++) {
 		var element = translatorOptions[index];
 		$('#ddFrom').append($('<option value="' + index + '">' + element.name + '</option>'));
 	}
 	if (translatorOptions.length === 1) {
 		$('#ddFrom').prop('disabled', true);
-		$('.translator-option-to').show();
-		fillToOptions(translatorOptions[0]['to']);
+		fill_ToOptions(translatorOptions[0]['to']);
 	}
 }
 
-function fillToOptions(translatorOptionTo) {
+function fill_ToOptions(translatorOptionTo) {
+	$('.translator-option-to').show();
 	for (var index = 0; index < translatorOptionTo.length; index++) {
 		var element = translatorOptionTo[index];
 		console.log(element);
@@ -78,7 +77,6 @@ function fillToOptions(translatorOptionTo) {
 	}
 	if (translatorOptionTo.length === 1) {
 		$('#ddTo').prop('disabled', true);
-		$('.translator-options').show();
 		addDictionaryOptions(bubble.getRequiredWordTranslatorCount(),
 			bubble.getRequiredSentenceTranslatorCount(),
 			translatorOptionTo[0].translators);
@@ -86,7 +84,8 @@ function fillToOptions(translatorOptionTo) {
 }
 
 function addDictionaryOptions(wordTranslatorcount, sentenceTranslatorCount, dictionaries) {
-	var elementBase = '<select id="word_translator_0">';
+	$('.translator-options').show();
+	var elementBase = '<select id="dictionary_0">';
 	for (var i = 0; i < wordTranslatorcount; i++) {
 		var element = elementBase.replace('0', i + '');
 		for (var index = 0; index < dictionaries.length; index++) {
@@ -94,7 +93,7 @@ function addDictionaryOptions(wordTranslatorcount, sentenceTranslatorCount, dict
 			element = element + '<option value="' + index + '">' + translator.name + '</option>';
 		}
 		$('.translator-options').append($('<label>Word Translator ' + (i + 1) + ': </label><br>'));
-		$('.translator-options').append($(element +  '</select><br>'));
+		$('.translator-options').append($(element + '</select><br>'));
 	}
 	//Sentence not supported yet
 }
@@ -113,9 +112,11 @@ function slideWithDiv(div, isBack) {
 
 }
 
-function addSelectedTranslatorNames(bubbleConfig) {
-	bubbleConfig['translator_1'] = 'tureng';
-	bubbleConfig['translator_2'] = 'seslisozluk';
+function addPreferences(languageFrom, languageTo, preference) {
+	$('.translator-options select').each(function (index, element) {
+		var pref = {from: languageFrom, to: languageTo, index: element.selectedIndex};
+		preference.push(pref);
+	});
 }
 
 /* CLICK LISTENERS */
@@ -164,22 +165,34 @@ $("#btnBack").click(function () {
 });
 
 $("#btnSave").click(function () {
+	if ($('.translator-option-from').css('display') !== 'block' ||
+		$('.translator-option-to').css('display') !== 'block' ||
+		$('.translator-options').css('display') !== 'block') {
+
+		$('#config_save_error').show();
+		setTimeout(function () {
+			$('#config_save_error').fadeOut(1000, function () {
+				$('#config_save_error').hide();
+			});
+		}, 1000);
+		return;
+	}
 	slideWithDiv($('#settings_menu'), true);
-	bubble = tempBubble;
+
 	var bubbleConfig = {
 		bubbleType: bubbleValue,
-		language: {
-			from: 'eng',
-			to: 'tr'
-		}
+		preferences: []
 	};
 
-	addSelectedTranslatorNames(bubbleConfig);
-
+	addPreferences(parseInt($("#ddFrom").val()), parseInt($("#ddTo").val()), bubbleConfig.preferences);
+	console.log(bubbleConfig);
 	chrome.runtime.sendMessage({
 		action: "save_bubble_config",
 		bubble_config: bubbleConfig
 	}, function (response) { });
+	
+	bubble = tempBubble;
+	bubble.setPreferences(bubbleConfig.preferences);
 });
 
 flashCard.click(function () {
@@ -200,6 +213,19 @@ $("input[type='radio']").click(function () {
 	}
 });
 
-$("#ddFrom").change(function (index) {
-	console.log(index);
+$("#ddFrom").change(function () {
+	var index = parseInt($(this).val());
+	$('.translator-option-to').hide();
+	$('.translator-options').hide();
+	fill_ToOptions(TranslatorFactory.getTranslatorOptions()[index]['to']);
 });
+
+$("#ddTo").change(function (index) {
+	var from_index = parseInt($("#ddFrom").val());
+	var to_index = parseInt($(this).val());
+	addDictionaryOptions(bubble.getRequiredWordTranslatorCount(),
+		bubble.getRequiredSentenceTranslatorCount(),
+		TranslatorFactory.getDictionaryOptions({ from: from_index, to: to_index }));
+});
+
+
