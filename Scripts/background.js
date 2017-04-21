@@ -59,23 +59,23 @@ chrome.runtime.onMessage.addListener(function (request, sender, callback) {
         return true;
     }
     else if (request.action == "get_bubble_config") {
-        bubbleConfig = mApiController.getUserConfig()? 
-                        mApiController.getUserConfig().bubble_config : 
-                        default_config.bubble_config;
+        bubbleConfig = mApiController.getUserConfig() ?
+            mApiController.getUserConfig().bubble_config :
+            default_config.bubble_config;
         callback(bubbleConfig);
         return true;
-    }    
+    }
     else if (request.action == "save_bubble_config") {
         bubbleConfig = request.bubble_config;
         mApiController.saveConfig(request.bubble_config);
         return true;
-    } 
+    }
     else if (request.action == "bubble_config") {
         //This request is done before every word search by content.js
-        bubbleConfig = bubbleConfig||
-                        mApiController.getUserConfig()? 
-                        mApiController.getUserConfig().bubble_config : 
-                        default_config.bubble_config;
+        if (!bubbleConfig)
+            bubbleConfig = mApiController.getUserConfig() ?
+                mApiController.getUserConfig().bubble_config :
+                default_config.bubble_config;
         callback(bubbleConfig);
         return true;
     }
@@ -87,17 +87,18 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
         setUnread(2);
         //if the duration has changed, update the alarm.
         //if (requestAfterDuration != alarm.periodInMinutes)
-            //registerForFlashcards();
+        //registerForFlashcards();
     }
 });
 
 chrome.runtime.onInstalled.addListener(function (details) {
     console.log(details.reason)
     if (details.reason == "install") {
-        chrome.storage.sync.set({ 'value': theValue }, function () {
-            // Notify that we saved.
-            message('Settings saved');
-        });
+        mApiController.startAuth(false, () => { mApiController.registerUser(); });
+        // chrome.storage.sync.set({ 'value': theValue }, function () {
+        //     // Notify that we saved.
+        //     message('Settings saved');
+        // });
     } else if (details.reason == "update") {
         var thisVersion = chrome.runtime.getManifest().version;
         console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");

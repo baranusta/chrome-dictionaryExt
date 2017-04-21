@@ -35,14 +35,14 @@ class ApiController {
             let self = this;
             var userId = firebase.auth().currentUser.uid
             firebase.database().ref('user/' + userId + '/searchCount').on('value', function (snapshot) {
-                self.searchCount = snapshot.val() + 1;
+                self.searchCount = snapshot.val();
                 console.log(self.searchCount);
             });
 
             firebase.database().ref('user/' + userId + '/config').on('value', function (snapshot) {
                 self.userConfig = snapshot.val();
                 console.log("userConfig:");
-                console.log( self.userConfig);
+                console.log(self.userConfig);
             });
 
             firebase.database().ref('config/flashCardReqMin').on('value', function (snapshot) {
@@ -52,7 +52,7 @@ class ApiController {
         }
     }
 
-    getUserConfig(){return this.userConfig;}
+    getUserConfig() { return this.userConfig || null; }
     getRequestAfterLimit() { return this.makeRequestAfter; }
     getUID(addIdToken) {
         if (!!firebase.auth().currentUser)
@@ -62,7 +62,7 @@ class ApiController {
             });
     }
 
-    startAuth(interactive) {
+    startAuth(interactive, callback) {
         // Request an OAuth token from the Chrome Identity API.
         chrome.identity.getAuthToken({ interactive: !!interactive }, function (token) {
             if (chrome.runtime.lastError && !interactive) {
@@ -79,7 +79,8 @@ class ApiController {
                             startAuth(interactive);
                         });
                     }
-                });
+                })
+                .then(()=>{ callback();});
             } else {
                 console.error('The OAuth Token was null');
             }
@@ -94,9 +95,23 @@ class ApiController {
         })
     }
 
+    registerUser() {
+        if (firebase.auth().currentUser != null) {
+            var user = firebase.auth().currentUser;
+            let userName = user.displayName;
+            var refUser = firebase.database().ref('user/' + user.uid);
+            refUser.set({
+                name: userName,
+                searchCount: 0,
+                config: default_config
+            });
+        }
+
+    }
+
     searchedWord(word) {
         if (firebase.auth().currentUser != null) {
-            let count = this.searchCount;
+            let count = this.searchCount + 1;
             console.log(firebase.auth().currentUser.uid);
             console.log(count);
             firebase.database()
@@ -108,17 +123,9 @@ class ApiController {
     addWord(word, tag) {
         if (firebase.auth().currentUser != null) {
             var user = firebase.auth().currentUser;
-            let userName = user.displayName;
             var refUser = firebase.database().ref('user/' + user.uid);
-            if (this.searchCount === 0) {
-                refUser.set({
-                    name: userName,
-                    searchCount: 0,
-                    config: default_config
-                });
-            }
             var newWordRef = refUser.child('searches/' + word).set({
-                tag: 'tag',
+                tag: 'general',
                 priority: 0,
                 status: 0,
                 word: word
@@ -126,11 +133,11 @@ class ApiController {
         }
     }
 
-    saveConfig(bubbleConfig){
+    saveConfig(bubbleConfig) {
         if (firebase.auth().currentUser != null) {
             var user = firebase.auth().currentUser;
             var refUser = firebase.database().ref('user/' + user.uid + '/config');
-            refUser.update({bubble_config: bubbleConfig});
+            refUser.update({ bubble_config: bubbleConfig });
         }
     }
 
