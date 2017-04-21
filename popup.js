@@ -50,7 +50,8 @@ function addBubbleOptions(bubbles, checkedBubbleValue) {
 				$('<input type="radio" name="bubble_type" value="' + bubble.value + '" checked />').appendTo(div);
 			else
 				$('<input type="radio" name="bubble_type" value="' + bubble.value + '" />').appendTo(div);
-			$('<img src="' + bubble.image + '">').appendTo(div);
+			$('<p>resim gelcek</p>').appendTo(div);
+			//$('<img src="' + bubble.image + '">').appendTo(div);
 			div.appendTo(containerDiv);
 		}
 	}
