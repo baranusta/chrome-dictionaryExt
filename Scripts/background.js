@@ -10,7 +10,7 @@ var bubbleConfig;
 chrome.runtime.onStartup.addListener(function () {
     mApiController.startAuth(false);
     //send data for debug purpose
-    registerForFlashcards();
+    //registerForFlashcards();
     if (debug) {
         //send a message with time
     }
@@ -30,12 +30,16 @@ chrome.runtime.onMessage.addListener(function (request, sender, callback) {
                     $.ajax({
                         url: request.url,
                         type: "GET",
-                        beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'Bearer ' + uid); },
-                        success: function (responseData) { callback(responseData); },
-                        fail: callback
-                    });
-                })
-                console.log('sent');
+                        beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'Bearer ' + uid); }
+                    })
+                    .done(function (responseData, statusText, xhr) { 
+                        if(xhr && xhr.status) 
+                        responseData.status = xhr.status; 
+                        callback(responseData); 
+                    })
+                    .fail(function (xhr, statusText) { callback(xhr); });
+                    console.log('sent');
+                });
             }
         }
         else if (method === 'POST') {
@@ -108,11 +112,11 @@ chrome.runtime.onInstalled.addListener(function (details) {
 
 //value period ForflashCardRequest
 function registerForFlashcards() {
-    chrome.alarms.create('flash_cards',
-        {
-            delayInMinutes: 0.1,
-            periodInMinutes: 0.2//requestAfterDuration
-        });
+    // chrome.alarms.create('flash_cards',
+    //     {
+    //         delayInMinutes: 0.1,
+    //         periodInMinutes: 0.2//requestAfterDuration
+    //     });
 }
 
 function changeViewByLoginState(isLoggedIn) {

@@ -115,7 +115,7 @@ function slideWithDiv(div, isBack) {
 
 function addPreferences(languageFrom, languageTo, preference) {
 	$('.translator-options select').each(function (index, element) {
-		var pref = {from: languageFrom, to: languageTo, index: element.selectedIndex};
+		var pref = { from: languageFrom, to: languageTo, index: element.selectedIndex };
 		preference.push(pref);
 	});
 }
@@ -132,10 +132,25 @@ $("#btnNextCard").click(function () {
 		url: "https://us-central1-turta-edf3c.cloudfunctions.net/flashCard"
 	}, function (responseText) {
 		//hide loader - show the content
-		if (responseText && responseText.word) {
-			//show word 
-			flashCard.html(responseText.word);
-			cardWord = responseText.word;
+		console.log(responseText);
+		if (responseText) {
+			if (responseText.status) {
+				if (responseText.status == 404) {
+					flashCard.html("flash card yok ama :/");
+					cardWord = null;
+				}
+			}
+			else if (responseText.word) {
+				//show word 
+				flashCard.html(responseText.word);
+				cardWord = responseText.word;
+
+			}
+			else {
+				flashCard.html("hakkin bitmis amaa :'(");
+				cardWord = null;
+
+			}
 		}
 		else {
 			//burda baska ihtimaller de var onu response objesine
@@ -143,6 +158,7 @@ $("#btnNextCard").click(function () {
 			flashCard.html("hakkin bitmis amaa :'(");
 			cardWord = null;
 		}
+
 		flashCard.show();
 	});
 });
@@ -191,7 +207,7 @@ $("#btnSave").click(function () {
 		action: "save_bubble_config",
 		bubble_config: bubbleConfig
 	}, function (response) { });
-	
+
 	bubble = tempBubble;
 	bubble.setPreferences(bubbleConfig.preferences);
 });
