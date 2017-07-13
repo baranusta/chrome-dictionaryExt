@@ -8,6 +8,7 @@ $(document).ready(function () {
 	//sets globals
 	var htmlStyles = window.getComputedStyle(document.querySelector("html"));
 	width = htmlStyles.getPropertyValue("--width"); // returns "#f00"
+	$("#search_word").focus();
 
 	chrome.runtime.sendMessage({ action: "get_bubble_config" }, function (response) {
 
@@ -132,24 +133,24 @@ $("#btnNextCard").click(function () {
 		url: "https://us-central1-turta-edf3c.cloudfunctions.net/flashCard"
 	}, function (responseText) {
 		//hide loader - show the content
-		console.log(responseText);
 		if (responseText) {
 			if (responseText.status) {
 				if (responseText.status == 404) {
 					flashCard.html("flash card yok ama :/");
 					cardWord = null;
 				}
-			}
-			else if (responseText.word) {
-				//show word 
-				flashCard.html(responseText.word);
-				cardWord = responseText.word;
+				else if (responseText.word) {
+					//show word 
+					flashCard.html(responseText.word);
+					cardWord = responseText.word;
+					prepareBubble();
 
-			}
-			else {
-				flashCard.html("hakkin bitmis amaa :'(");
-				cardWord = null;
+				}
+				else {
+					flashCard.html("hakkin bitmis amaa :'(");
+					cardWord = null;
 
+				}
 			}
 		}
 		else {
@@ -163,9 +164,19 @@ $("#btnNextCard").click(function () {
 	});
 });
 
+function prepareBubble() {
+	$('#btnNextCardBackGround').height(100);
+	bubble.renderAtNewPosition(0, 0);
+	bubble.setVisibilityAddSection('hidden');
+	bubble.bubble.style.maxHeight = '200px';
+	bubble.showTranslationResults(cardWord);
+
+}
+
 $("#btnSearch").click(function () {
 	if (searchText.val().trim().length !== 0) {
 		animatebtnNextCard();
+		$('#btnNextCardBackGround').height(0);
 		bubble.closeBubble();
 		bubble.renderAtNewPosition(0, 0);
 		bubble.setVisibilityAddSection("visible");
@@ -215,10 +226,7 @@ $("#btnSave").click(function () {
 flashCard.click(function () {
 	if (cardWord) {
 		flashCard.hide();
-		bubble.renderAtNewPosition(0, 0);
-		bubble.setVisibilityAddSection('hidden');
-		bubble.bubble.style.maxHeight = '200px';
-		bubble.showTranslationResults(cardWord);
+		$('#btnNextCardBackGround').height(0);
 	}
 });
 
@@ -228,6 +236,12 @@ $("input[type='radio']").click(function () {
 		bubbleValue = radioValue;
 		tempBubble = TranslationBubbleFactory.getBubble(radioValue);
 	}
+});
+
+$('input[type=text]').on('keydown', function(e) {
+    if (e.which == 13) {
+		$('#btnSearch').click();
+    }
 });
 
 $("#ddFrom").change(function () {
