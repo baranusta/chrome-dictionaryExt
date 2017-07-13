@@ -124,9 +124,9 @@ class ApiController {
         if (firebase.auth().currentUser != null) {
             var user = firebase.auth().currentUser;
             var refUser = firebase.database().ref('user/' + user.uid);
-            var newWordRef = refUser.child('flash_cards/' + word).set({
-                tag: 'general',
-                priority: 0,
+            var tagName = tag || 'default' ;
+            var newWordRef = refUser.child('flash_cards/' + tagName + '/learning/' + word).set({
+                timesRequested: 0,
                 status: 0,
                 word: word
             });
