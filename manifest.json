@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Turta",
   "description": "This extension shows meaning of the selected word's meaning and example sentences",
-  "version": "0.0.1",
+  "version": "0.0.1.2",
   "browser_action": {
     "default_icon": "icons/dictionaryIcon.png",
     "default_popup": "popup.html",
