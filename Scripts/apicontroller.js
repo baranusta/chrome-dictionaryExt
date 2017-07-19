@@ -1,21 +1,25 @@
 class ApiController {
-    // updateRequestAfterDuration ıs a callback function
     constructor() {
         let self = this;
         self.searchCount = 0;
         self.userConfig = null;
 
+        // Initialize Firebase
         var config = {
-            apiKey: "AIzaSyBLXdjn83IVKp9SDiP_g9zOQJzAlEDzUME",
-            authDomain: "turta-edf3c.firebaseapp.com",
-            databaseURL: "https://turta-edf3c.firebaseio.com",
-            storageBucket: "turta-edf3c.appspot.com",
-            messagingSenderId: "470726396129"
+            apiKey: "AIzaSyCa1Glyaw_HJakn-u8ilL8nM3vNdEfZoPU",
+            authDomain: "turta-dd7f6.firebaseapp.com",
+            databaseURL: "https://turta-dd7f6.firebaseio.com",
+            projectId: "turta-dd7f6",
+            storageBucket: "turta-dd7f6.appspot.com",
+            messagingSenderId: "978459002445"
         };
         firebase.initializeApp(config);
+            console.log("yo")
 
         firebase.auth().onAuthStateChanged(function (user) {
+            console.log("change")
             if (user) {
+                console.log(user);
                 self.registerForData();
                 user.providerData.forEach(function (profile) {
                     console.log("Sign-in provider: " + profile.providerId);
@@ -44,22 +48,25 @@ class ApiController {
                 console.log("userConfig:");
                 console.log(self.userConfig);
             });
-
-            firebase.database().ref('config/flashCardReqMin').on('value', function (snapshot) {
-                if (!!self.updateRequestAfterDuration)
-                    self.updateRequestAfterDuration(snapshot.val());
-            });
         }
     }
 
     getUserConfig() { return this.userConfig || null; }
     getRequestAfterLimit() { return this.makeRequestAfter; }
     getUID(addIdToken) {
-        if (!!firebase.auth().currentUser)
+        if (isUserLogedIn()){
             firebase.auth().currentUser.getToken(/* forceRefresh */ true).then(function (idToken) {
                 addIdToken(idToken);
             }).catch(function (error) {
             });
+            return true;
+        }
+        else
+            return false;
+    }
+
+    isUserLoggedIn(){
+        return !!firebase.auth().currentUser;
     }
 
     startAuth(interactive, callback) {
@@ -67,6 +74,7 @@ class ApiController {
         chrome.identity.getAuthToken({ interactive: !!interactive }, function (token) {
             if (chrome.runtime.lastError && !interactive) {
                 console.log('It was not possible to get a token programmatically.');
+                console.log(chrome.runtime.lastError);
             } else if (chrome.runtime.lastError) {
                 console.error(chrome.runtime.lastError);
             } else if (token) {
@@ -95,15 +103,19 @@ class ApiController {
         })
     }
 
-    registerUser() {
+    registerUserIfNotExist(callback) {
         if (firebase.auth().currentUser != null) {
             var user = firebase.auth().currentUser;
             let userName = user.displayName;
             var refUser = firebase.database().ref('user/' + user.uid);
-            refUser.set({
-                name: userName,
-                searchCount: 0,
-                config: default_config
+            refUser.once('value', function (snapshot) {
+                if(!snapshot.val()){
+                    refUser.set({
+                    name: userName,
+                    searchCount: 0,
+                    config: default_config
+                    });
+                }
             });
         }
 

@@ -12,23 +12,18 @@ $(document).ready(function () {
 
 	chrome.runtime.sendMessage({ action: "get_bubble_config" }, function (response) {
 
-		bubble = TranslationBubbleFactory.getBubble(response.bubbleType);
-		bubbleValue = response.bubbleType;
-		tempBubble = bubble;
-		//sets parameters
-		bubble.setAddbtnResultListener(function () { window.close(); });
+		chrome.runtime.sendMessage({ action: "is_logged_in" }, function (userAuthStatus) {
+			prepareView(userAuthStatus, bubbleValue);
 
 
-		//sets outlook
-		$('#bottom').append($('.dictionary-bubble'));
-		flashCard.hide();
-		$('#config_save_error').hide();
-		$('.translator-option-to').hide();
-		$('.translator-options').hide();
-		addBubbleOptions(TranslationBubbleFactory.bubbles(), bubbleValue);
-		fill_FromOptions(TranslatorFactory.getTranslatorOptions());
-
+			bubble = TranslationBubbleFactory.getBubble(response.bubbleType);
+			bubbleValue = response.bubbleType;
+			tempBubble = bubble;
+			//sets parameters
+			bubble.setAddbtnResultListener(function () { window.close(); });
+		});
 	});
+
 });
 
 var searchText = $("#search_word");
@@ -111,7 +106,29 @@ function slideWithDiv(div, isBack) {
 		$('.content').animate({ left: -num }, 500);
 		div.animate({ left: 0 }, 500);
 	}
+}
 
+function prepareView(isLoggedIn, bubbleValue) {
+	console.log(isLoggedIn);
+	if (!isLoggedIn) {
+		$('.content').hide();
+		$('.login').show();
+	}
+	else {
+		$('.content').show();
+		$('.login').hide();
+	}
+	if(bubbleValue)
+		addBubbleOptions(TranslationBubbleFactory.bubbles(), bubbleValue);
+	
+	$('#bottom').append($('.dictionary-bubble'));
+	flashCard.hide();
+	$('#config_save_error').hide();
+	$('.translator-option-to').hide();
+	$('.translator-options').hide();
+
+
+	fill_FromOptions(TranslatorFactory.getTranslatorOptions());
 }
 
 function addPreferences(languageFrom, languageTo, preference) {
@@ -119,6 +136,16 @@ function addPreferences(languageFrom, languageTo, preference) {
 		var pref = { from: languageFrom, to: languageTo, index: element.selectedIndex };
 		preference.push(pref);
 	});
+}
+
+
+function prepareBubble() {
+	$('#btnNextCardBackGround').height(100);
+	bubble.renderAtNewPosition(0, 0);
+	bubble.setVisibilityAddSection('hidden');
+	bubble.bubble.style.maxHeight = '200px';
+	bubble.showTranslationResults(cardWord);
+
 }
 
 /* CLICK LISTENERS */
@@ -130,6 +157,7 @@ $("#btnNextCard").click(function () {
 	chrome.runtime.sendMessage({
 		method: 'GET',
 		action: 'xhttp',
+		isUserRequired: true,
 		url: "https://us-central1-turta-edf3c.cloudfunctions.net/flashCard"
 	}, function (responseText) {
 		//hide loader - show the content
@@ -164,14 +192,11 @@ $("#btnNextCard").click(function () {
 	});
 });
 
-function prepareBubble() {
-	$('#btnNextCardBackGround').height(100);
-	bubble.renderAtNewPosition(0, 0);
-	bubble.setVisibilityAddSection('hidden');
-	bubble.bubble.style.maxHeight = '200px';
-	bubble.showTranslationResults(cardWord);
-
-}
+$("#btnLogin").click(function () {
+	chrome.runtime.sendMessage({ action: "login" }, function (response) {
+		prepareView(true);
+	});
+});
 
 $("#btnSearch").click(function () {
 	if (searchText.val().trim().length !== 0) {
@@ -238,10 +263,10 @@ $("input[type='radio']").click(function () {
 	}
 });
 
-$('input[type=text]').on('keydown', function(e) {
-    if (e.which == 13) {
+$('input[type=text]').on('keydown', function (e) {
+	if (e.which == 13) {
 		$('#btnSearch').click();
-    }
+	}
 });
 
 $("#ddFrom").change(function () {

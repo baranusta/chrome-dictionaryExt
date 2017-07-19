@@ -1,5 +1,4 @@
 mApiController = new ApiController()
-mApiController.updateRequestAfterDuration = updateRequestAfterDuration;
 debug = true
 requestAfterDuration = 15;
 var bubbleConfig;
@@ -26,20 +25,37 @@ chrome.runtime.onMessage.addListener(function (request, sender, callback) {
             }
             else {
                 console.log('send');
-                mApiController.getUID(uid => {
+                if(request.isUserRequired){
+                    if(!mApiController.getUID(uid => {
+                        $.ajax({
+                            url: request.url,
+                            type: "GET",
+                            beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'Bearer ' + uid); }
+                        })
+                        .done(function (responseData, statusText, xhr) { 
+                            if(xhr && xhr.status) 
+                            responseData.status = xhr.status; 
+                            callback(responseData); 
+                            console.log("OK");
+                        })
+                        .fail(function (xhr, statusText) { console.log("OK");callback(xhr); });
+                        console.log('sent');
+                    }))
+                        throw "Authentication is required";
+                }
+                else{
                     $.ajax({
-                        url: request.url,
-                        type: "GET",
-                        beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'Bearer ' + uid); }
-                    })
-                    .done(function (responseData, statusText, xhr) { 
-                        if(xhr && xhr.status) 
-                        responseData.status = xhr.status; 
-                        callback(responseData); 
-                    })
-                    .fail(function (xhr, statusText) { callback(xhr); });
-                    console.log('sent');
-                });
+                            url: request.url,
+                            type: "GET"
+                        })
+                        .done(function (responseData, statusText, xhr) { 
+                            if(xhr && xhr.status) 
+                            responseData.status = xhr.status; 
+                            callback(responseData); 
+                            console.log("OK");
+                        })
+                        .fail(function (xhr, statusText) { console.log("OK");callback(xhr); });
+                }
             }
         }
         else if (method === 'POST') {
@@ -47,11 +63,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, callback) {
         return true; // prevents the callback from being called too early on return
     }
     else if (request.action == "login") {
-        mApiController.startAuth(true);
+        mApiController.startAuth(true, function(){
+            mApiController.registerUserIfNotExist(callback);
+            callback();
+        });
         return true;
     }
-    else if (request.action == "isLoggedIn") {
-        callBack(true);
+    else if (request.action == "is_logged_in") {
+        callback(mApiController.isUserLoggedIn());
         return true;
     }
     else if (request.action == "word_searched") {
@@ -88,7 +107,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, callback) {
 chrome.alarms.onAlarm.addListener(function (alarm) {
     if (alarm.name == 'flash_cards') {
         console.log(requestAfterDuration)
-        setUnread(2);
+        //setUnread(2);
         //if the duration has changed, update the alarm.
         //if (requestAfterDuration != alarm.periodInMinutes)
         //registerForFlashcards();
@@ -119,20 +138,6 @@ function registerForFlashcards() {
     //     });
 }
 
-function changeViewByLoginState(isLoggedIn) {
-
-    var views = chrome.extension.getViews({
-        type: "popup"
-    });
-    for (var i = 0; i < views.length; i++) {
-        views[i].$('.LoginButton').style.visibility = isLoggedIn ? "hidden" : "visible";
-    }
-};
-
-function updateRequestAfterDuration(value) {
-    requestAfterDuration = value;
-    console.log(value);
-}
 
 function setAllRead() {
     chrome.browserAction.setBadgeBackgroundColor({ color: [0, 255, 0, 128] });

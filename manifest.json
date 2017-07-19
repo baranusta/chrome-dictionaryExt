@@ -1,54 +1,60 @@
 {
   "manifest_version": 2,
-
   "name": "Turta",
   "description": "This extension shows meaning of the selected word's meaning and example sentences",
-  "version": "1.0.3",
-
+  "version": "0.0.1",
   "browser_action": {
     "default_icon": "icons/dictionaryIcon.png",
     "default_popup": "popup.html",
     "default_title": "Turta"
   },
-
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["scripts/jquery.min.js",
-                "scripts/translatorFactory.js",
-                "scripts/TranslationBubble.js",
-                "scripts/TranslationBubbleDoubleColumnAndRow.js",
-                "scripts/TranslationBubbleFactory.js",
-                "scripts/content.js"],
-      "css": ["css/content.css"],
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "scripts/jquery.min.js",
+        "scripts/translatorFactory.js",
+        "scripts/TranslationBubble.js",
+        "scripts/TranslationBubbleDoubleColumnAndRow.js",
+        "scripts/TranslationBubbleFactory.js",
+        "scripts/content.js"
+      ],
+      "css": [
+        "css/content.css"
+      ],
       "run_at": "document_end",
       "all_frames": true
     }
   ],
   "background": {
-      "scripts": [ "scripts/jquery.min.js",
-          "scripts/firebase.js" ,
-          "scripts/constructors.js",
-          "scripts/apicontroller.js",
-          "scripts/background.js"],
-      "persistent": false
-  },
-
-  "icons":{
-    "128":"icons/dictionaryIcon.png"
-  },
-
-  "web_accessible_resources": [
-      "icons/*.png",
-      "icons/*.jpg"
+    "scripts": [
+      "scripts/jquery.min.js",
+      "scripts/firebase.js",
+      "scripts/constructors.js",
+      "scripts/apicontroller.js",
+      "scripts/background.js"
     ],
-
-    "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
-    "oauth2": {
-            "client_id": "470726396129-9so4ug54cpqrvpd89g18i4367s6j15d2.apps.googleusercontent.com",
-            "scopes": ["profile","email"]
-        }  ,
-        "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwv0MiJpoUN/PS4yK11WPAw+Cz5JKZVfXinkAWvZlVKPMsmIzy/HQGomwYpoHVDbbXPI4hnm0ggU1l+2E671c2WDsHsPpONktMp3P5YMxk4/iKPjP46M0kzBunqGU7+xZCJ5bfRO0++n6HqjY511WkkIQ8FBZ037iGkNeKtNRrKEEirh0gb2gVzOTSQk+tTA0mE84xShnOTtV6dY5Rt/cjxHQIFQN8mF0/Y03RDfUf+93YwTqMjil7oTtn2TSR9rVHMoHGi/JyoDIq8vLxJeBbOaxJc5OBKg9m90n6R9C8bwO1FVXimTn+d6rSQ7IKsmrzqE++FhnISJ/vs7In3eiZwIDAQAB",
+    "persistent": false
+  },
+  "icons": {
+    "128": "icons/dictionaryIcon.png"
+  },
+  "web_accessible_resources": [
+    "icons/*.png",
+    "icons/*.jpg"
+  ],
+  "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
+  "oauth2": {
+    "client_id": "978459002445-jb33rlvj1vf4tl556leku66drads7nse.apps.googleusercontent.com",
+    "scopes": [
+      "profile",
+      "email"
+    ]
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmLEJjb2mYdV39SFmqBX8bhaYUOGQGeD7glaxm92AuYOFO3dslohaxGUcVGarAO6kB5ldQjCeQ/2G7qhMkzCvqrSa9yHiFaiw8fzOuRu8Clew1+buel3WWKw8N/adt5VVu+LR5Af4NevQjuJG4lDmneaY7Ta4gGCjABahZOTeT0J9BLAeSYtb7gzoJrPMQcm/cGjN1ALfZ/GrySYrM3k5tnbpM4EFeyY3dFboG8ERhYebAv1kW7RArTZ1s0gG398wolhWmQ7tTbpZW5donkqp18881+UW6OVWleZbuXtPNtYKsTjLAMlSxD8BV5cUTL1k3vQqwWxSkdSfxomP6aE95QIDAQAB",
   "permissions": [
     "identity",
     "alarms",
