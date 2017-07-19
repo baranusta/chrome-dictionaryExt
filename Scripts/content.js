@@ -66,5 +66,5 @@ getSelectedWord = function (e) {
 }
 
 shouldOpenBubble = function (event, selected) {
-    return event.ctrlKey && selected.length > 0;
+    return (key.ctrl || key.command) && selected.length > 0;
 };
