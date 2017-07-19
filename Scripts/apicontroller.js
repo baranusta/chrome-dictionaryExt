@@ -134,6 +134,7 @@ class ApiController {
 
     addWord(word, tag) {
         if (firebase.auth().currentUser != null) {
+            word = word.toLowerCase();
             var user = firebase.auth().currentUser;
             var refUser = firebase.database().ref('user/' + user.uid);
             var tagName = tag || 'default' ;

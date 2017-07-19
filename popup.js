@@ -13,7 +13,6 @@ $(document).ready(function () {
 	chrome.runtime.sendMessage({ action: "get_bubble_config" }, function (response) {
 
 		chrome.runtime.sendMessage({ action: "is_logged_in" }, function (userAuthStatus) {
-			prepareView(userAuthStatus, bubbleValue);
 
 
 			bubble = TranslationBubbleFactory.getBubble(response.bubbleType);
@@ -21,6 +20,8 @@ $(document).ready(function () {
 			tempBubble = bubble;
 			//sets parameters
 			bubble.setAddbtnResultListener(function () { window.close(); });
+			
+			prepareView(userAuthStatus, bubbleValue);
 		});
 	});
 
