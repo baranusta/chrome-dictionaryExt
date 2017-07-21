@@ -159,7 +159,7 @@ $("#btnNextCard").click(function () {
 		method: 'GET',
 		action: 'xhttp',
 		isUserRequired: true,
-		url: "https://us-central1-turta-edf3c.cloudfunctions.net/flashCard"
+		url: "https://us-central1-turta-dd7f6.cloudfunctions.net/flashCard"
 	}, function (responseText) {
 		//hide loader - show the content
 		if (responseText) {

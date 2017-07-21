@@ -26,21 +26,28 @@ chrome.runtime.onMessage.addListener(function (request, sender, callback) {
             else {
                 console.log('send');
                 if(request.isUserRequired){
-                    if(!mApiController.getUID(uid => {
-                        $.ajax({
-                            url: request.url,
-                            type: "GET",
-                            beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'Bearer ' + uid); }
-                        })
-                        .done(function (responseData, statusText, xhr) { 
-                            if(xhr && xhr.status) 
-                            responseData.status = xhr.status; 
-                            callback(responseData); 
-                            console.log("OK");
-                        })
-                        .fail(function (xhr, statusText) { console.log("OK");callback(xhr); });
-                        console.log('sent');
-                    }))
+                    var uid = mApiController.getUID();
+                    if(!!uid){
+                        if(!mApiController.hasCardRequest()){
+                            callback('hakkin bitmiis kips');
+                        }
+                        else{
+                            $.ajax({
+                                url: request.url,
+                                type: "GET",
+                                beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', 'Bearer ' + uid); }
+                            })
+                            .done(function (responseData, statusText, xhr) { 
+                                console.log(responseData);
+                                if(xhr && xhr.status) 
+                                    responseData.status = xhr.status; 
+                                callback(responseData); 
+                                console.log("OK");
+                            })
+                            .fail(function (xhr, statusText) { console.log("NOPE");callback(xhr); });
+                        }
+                    }
+                    else
                         throw "Authentication is required";
                 }
                 else{

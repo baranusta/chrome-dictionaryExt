@@ -3,6 +3,7 @@ class ApiController {
         let self = this;
         self.searchCount = 0;
         self.userConfig = null;
+        self.leftRequest = -1;
 
         // Initialize Firebase
         var config = {
@@ -43,6 +44,13 @@ class ApiController {
                 console.log(self.searchCount);
             });
 
+            //This has to be done to prevent unnecessary card requests
+            //But date also has to be handled somehow. what if date has changed but left request is 0?
+            firebase.database().ref('user/' + userId + '/card_request/leftRequest').on('value', function (snapshot) {
+                self.leftRequest = snapshot.val() || -1;
+                console.log(self.leftRequest);
+            });
+
             firebase.database().ref('user/' + userId + '/config').on('value', function (snapshot) {
                 self.userConfig = snapshot.val();
                 console.log("userConfig:");
@@ -54,19 +62,19 @@ class ApiController {
     getUserConfig() { return this.userConfig || null; }
     getRequestAfterLimit() { return this.makeRequestAfter; }
     getUID(addIdToken) {
-        if (isUserLogedIn()){
-            firebase.auth().currentUser.getToken(/* forceRefresh */ true).then(function (idToken) {
-                addIdToken(idToken);
-            }).catch(function (error) {
-            });
-            return true;
+        if (this.isUserLoggedIn()){
+            return firebase.auth().currentUser.ld;
         }
         else
-            return false;
+            return null;
     }
 
     isUserLoggedIn(){
         return !!firebase.auth().currentUser;
+    }
+
+    hasCardRequest(){
+        return this.leftRequest !== 0;
     }
 
     startAuth(interactive, callback) {
@@ -124,8 +132,6 @@ class ApiController {
     searchedWord(word) {
         if (firebase.auth().currentUser != null) {
             let count = this.searchCount + 1;
-            console.log(firebase.auth().currentUser.uid);
-            console.log(count);
             firebase.database()
                 .ref('user/' + firebase.auth().currentUser.uid)
                 .update({ searchCount: count });
