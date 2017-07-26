@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Turta",
   "description": "This extension shows meaning of the selected word's meaning and example sentences",
-  "version": "0.0.1.3",
+  "version": "0.0.1.4",
   "browser_action": {
     "default_icon": "icons/dictionaryIcon.png",
     "default_popup": "popup.html",
@@ -49,13 +49,19 @@
   ],
   "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
   "oauth2": {
-    "client_id": "978459002445-jb33rlvj1vf4tl556leku66drads7nse.apps.googleusercontent.com",
+    //dev
+    "client_id": "1092284529465-i9eqnm58srk1t4akuukb0ctrhj71vfgk.apps.googleusercontent.com",
+    //prod
+    //"client_id": "978459002445-jb33rlvj1vf4tl556leku66drads7nse.apps.googleusercontent.com",
     "scopes": [
       "profile",
       "email"
     ]
   },
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmLEJjb2mYdV39SFmqBX8bhaYUOGQGeD7glaxm92AuYOFO3dslohaxGUcVGarAO6kB5ldQjCeQ/2G7qhMkzCvqrSa9yHiFaiw8fzOuRu8Clew1+buel3WWKw8N/adt5VVu+LR5Af4NevQjuJG4lDmneaY7Ta4gGCjABahZOTeT0J9BLAeSYtb7gzoJrPMQcm/cGjN1ALfZ/GrySYrM3k5tnbpM4EFeyY3dFboG8ERhYebAv1kW7RArTZ1s0gG398wolhWmQ7tTbpZW5donkqp18881+UW6OVWleZbuXtPNtYKsTjLAMlSxD8BV5cUTL1k3vQqwWxSkdSfxomP6aE95QIDAQAB",
+  //dev
+  "key": "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC5mMrmlPsar3lysKLyQtTQzHHUjCngjx0JNbP7JZf0SwTEiejnT6DIiPO2PaLBr6njrvLE3DlazO0/NVIhf7S8Q+c/mYQ0ZkK5gQVj4Gqzlg/1aM0xrGWypkWhZaN0pJrgUUNYCv0tCE7w/YjQQGpJBoBRu9kuk5Hduj+It4uJPMA45V82kpOj+Vvy5SezVHgZUuISvTy75BdxHxnnbvuQmlaRExpHcmDbw0snPi+LoO8Pl2jWT+ToB9+hxnZydt7CaFVEVV6ucJ7OwlE1eUDujb9RLIso5ntxoIAO8MGCW9Az6MJK46R01mTMVHxVOSHYNG/98W+FO7HQagW711HfAgMBAAECggEAdGvJ6zZNBYJJNo5iyIDvqkJ0rRV3N2vOlPZg/guo9A8S4I550I98lg6CgjDLpZ+hfDdEBgT23WRq9hlmeaj4IJifuJ999Lio5mBulyYxCJH7VL/250/zQ0tVplZxYDvZAxk2m0XZZqQtkLIZXjjp8wDnAV5KcBMVjvbD3+jy2JR3ovhpmWD6vSdpdTIMZ2nb7myBcyP+lCVn73LGkQWlgnp6TFeSe1dZI3ER6F01MncymxOm6KRRRBouU0xANtFjNiCxbQDhr8y+3tS5U4pRCQhFERi6u441MkSDN8fGOLPXVCU972OmDOzVuraaNaNo+Aqh+l44fXjb6kD0OZ57sQKBgQDeTb/D4WrxcXpRGelt8e+mY9Da8a4Z9MCr7AwXhaMZlRthyXeyBh5Hkgq+O6zZzE6PPfibO7MbATCkle1pW6Z4b9lbb9qEaTKqpveK7bljHQWFgdCVMfG/Tmucek1cNiEP5px3eco2/vbe/mhd1mJendtGsjUy6fzhfq17w6fU8wKBgQDVuqySSsOmJPt4auO6flzXCajWJfHYSYxila8Zn4gQteNu8JIC8gt/yF5I/CmXtTTTaASXzJWUAkstqTr7qKUe2YovCXvenOGAKGrWXqSTSHNzhxAQlyN1h9cC0HzmL28/CbRZIqps0lqa95rpJt0MXQ+nxsIvQdoPwUj4v2n6ZQKBgQCymcqAqGFQO7hm4ieNonvEtZr93H/g8Ke/OHT6jO5dxlLqfH+C8rFvFOE2tyEHFsLjCInsxcj+4DThdmb4Z57WUh5R/QqVqSMAwgZNgvKXs6BVA9e9lhPAfFOusv/mHsLvUHrS7nFNQAi9Xa4h/fSoSbD7Gn/tONpnnGvq7GWxiwKBgE7OjzU99hg8CLFlEGVClK8Bs8yKnzs2G1p6gN780OoAd0T/1YbagtzyH7nfqOJ0gW72KsNiP0Ec+2VxwfrrOz89zVL8tzzlMczUmlhC+4IHM/LEOWs0n3GFzgUOpQ8nLGjdBi/btWV8xsXfSLJxjw4w/kXJ5u4P5PzsMyDtS4F1AoGBAIUPTquQEeoCvKiKVeyFpDmPwjDNu+4H90ZfSLH2hu5wwgCjCm6JDhypALBa6CgxBshVisyOnzi6zijOgbOoVsBJZeF348dnH9lvmqOOh2O/lJ2s0FbkdmqYEanXgRdbuQYRNN20qwufyisD5PEAj4i4ruJiUr4FqeJotqT5YlMi",
+  //prod
+  //"key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmLEJjb2mYdV39SFmqBX8bhaYUOGQGeD7glaxm92AuYOFO3dslohaxGUcVGarAO6kB5ldQjCeQ/2G7qhMkzCvqrSa9yHiFaiw8fzOuRu8Clew1+buel3WWKw8N/adt5VVu+LR5Af4NevQjuJG4lDmneaY7Ta4gGCjABahZOTeT0J9BLAeSYtb7gzoJrPMQcm/cGjN1ALfZ/GrySYrM3k5tnbpM4EFeyY3dFboG8ERhYebAv1kW7RArTZ1s0gG398wolhWmQ7tTbpZW5donkqp18881+UW6OVWleZbuXtPNtYKsTjLAMlSxD8BV5cUTL1k3vQqwWxSkdSfxomP6aE95QIDAQAB",
   "permissions": [
     "identity",
     "alarms",

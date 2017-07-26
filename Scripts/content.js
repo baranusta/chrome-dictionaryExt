@@ -9,8 +9,13 @@ document.addEventListener('mouseup', function (e) {
         return;
 
     var rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
-    bottom = $(window).height() - rect.top + 4 - window.pageYOffset;
     left = rect.left + (rect.width / 2);
+
+    if($(document.body).css("position").includes("relative"))
+        bottom = document.body.getBoundingClientRect().bottom - rect.top + 4;
+    else
+        bottom = $(window).height() - rect.top + 4 - window.pageYOffset;
+    
 
     chrome.runtime.sendMessage({ action: "bubble_config"}, function (responseText) {
 		myBubble = TranslationBubbleFactory.getBubble(responseText.bubbleType)

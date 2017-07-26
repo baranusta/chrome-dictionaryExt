@@ -5,17 +5,26 @@ class ApiController {
         self.userConfig = null;
         self.leftRequest = -1;
 
-        // Initialize Firebase
+        
+        // Initialize Firebase Dev
         var config = {
-            apiKey: "AIzaSyCa1Glyaw_HJakn-u8ilL8nM3vNdEfZoPU",
-            authDomain: "turta-dd7f6.firebaseapp.com",
-            databaseURL: "https://turta-dd7f6.firebaseio.com",
-            projectId: "turta-dd7f6",
-            storageBucket: "turta-dd7f6.appspot.com",
-            messagingSenderId: "978459002445"
+            apiKey: "AIzaSyDuAZdUPf5PDVz5nCQPSjsnhXViRvYzMow",
+            authDomain: "turta-dev.firebaseapp.com",
+            databaseURL: "https://turta-dev.firebaseio.com",
+            projectId: "turta-dev",
+            storageBucket: "turta-dev.appspot.com",
+            messagingSenderId: "150151844017"
         };
+        // Initialize Firebase Prod
+        // var config = {
+        //     apiKey: "AIzaSyCa1Glyaw_HJakn-u8ilL8nM3vNdEfZoPU",
+        //     authDomain: "turta-dd7f6.firebaseapp.com",
+        //     databaseURL: "https://turta-dd7f6.firebaseio.com",
+        //     projectId: "turta-dd7f6",
+        //     storageBucket: "turta-dd7f6.appspot.com",
+        //     messagingSenderId: "978459002445"
+        // };
         firebase.initializeApp(config);
-            console.log("yo")
 
         firebase.auth().onAuthStateChanged(function (user) {
             console.log("change")

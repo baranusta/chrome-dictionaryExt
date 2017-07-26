@@ -3,6 +3,11 @@ var bubbleValue;
 var width;
 var bubbleConfig;
 
+//DEV
+const flashCardURL = "https://us-central1-turta-dev.cloudfunctions.net/flashCard"
+//PROD
+//const flashCardURL = "https://us-central1-turta-dd7f6.cloudfunctions.net/flashCard"
+
 $(document).ready(function () {
 
 	//sets globals
@@ -159,7 +164,7 @@ $("#btnNextCard").click(function () {
 		method: 'GET',
 		action: 'xhttp',
 		isUserRequired: true,
-		url: "https://us-central1-turta-dd7f6.cloudfunctions.net/flashCard"
+		url: flashCardURL
 	}, function (responseText) {
 		//hide loader - show the content
 		if (responseText) {
